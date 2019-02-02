@@ -13,7 +13,8 @@ Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which
 
 ![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/Startscreen1.jpg "Example Startscreen")
 
-![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/Multiscreen.HMI "Example Startscreen")
+![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/digitmode.jpg "Example Digitscreen")
+
 
 
 # Introduction to Nextion Displays
