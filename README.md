@@ -19,7 +19,7 @@ The amout of pages is only limited to the amount of memory.
 In the Editor you can place pictures, fonts , buttons, text Lables like in Visual Studio. Just way morte simple. 
 But powerful! From the Raspi side it is possible to place data to a spezial component placed on the page by the editor.
 You just have to use the serial connection. To place a text in a textlabel it is like t0.txt="your Text".
-To close sending you have to terminate like the times x0ff.
+To close sending you have to terminate like three times x0ff.
 
 There is the possibility to place some logic into the display. For example place a button on a page and programm page 2 at release event. The page 2 will be displayed without the help of the Raspi.
 
@@ -53,11 +53,15 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 
 # Installation
 
-(1)-- Power off the display. Store the .tft file on a SD Card and push the SD card in the display. Power on the display. There must be only 1 file on the card. 
-Remove SD Card after installation 
-(2)-- load the NEXTIONDisplay addin in the Craftbeerpi addin section.
+(1)-- Power off the display. Store the .tft file on a SD Card and push the SD card in the display. Power on the display. There must be only 1 file on the card. Remove SD Card after installation.
 
-Maybe the Serical connection has to be turned on at the RASPI Settings.
+(2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section.
+
+Maybe the Serial connection has to be turned on at the RASPI Settings.
+Maybe pyserial lib has to be installed if there is an error at import serial:
+
+In commandbox type in: python -m pip install pyserial
+
 
 
 # Usage
