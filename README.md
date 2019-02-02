@@ -5,7 +5,8 @@ This is Alpha and not for use in production installations!
 Until now I wrote no code! Only Display design in alpha version!
 
 
-# This addin is designed for Craftbeerpi 3.02 and will display mainly temperatures via serial connection to a Color Touch TFT. Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which works via SPI connection in my pepository.
+# What for?
+This addin is designed for Craftbeerpi 3.02 and will display mainly temperatures via serial connection to a Color Touch TFT. Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which works via SPI connection in my pepository.
 
 # Introduction to Nextion Displays
 
