@@ -49,7 +49,7 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 
 # Wireing the display
 
-![Wireing]("https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3 Display/MMDVM-Nextion-wiring-for-programming.jpg" "BrewNextionDisplay 3.5 Zoll")
+![Wireing](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/MMDVM-Nextion-wiring-for-programming.jpg "BrewNextionDisplay 3.5 Zoll")
 
 # Installation
 
