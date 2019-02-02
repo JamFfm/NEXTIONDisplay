@@ -2,11 +2,14 @@
 Use Nextion Display on a CraftbeerPi3 instalation.
 
 This is Alpha and not for use in production installations!
+
 Until now I wrote no code! Only Display design in alpha version!
 
 
 # What for?
-This addin is designed for Craftbeerpi 3.02 and will display mainly temperatures via serial connection to a Color Touch TFT. Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which works via SPI connection in my pepository.
+This addin is designed for Craftbeerpi 3.02 and will display mainly temperatures via serial connection to a Color Touch TFT. 
+
+Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which works via SPI connection in my pepository.
 
 # Introduction to Nextion Displays
 
@@ -23,10 +26,16 @@ There is the possibility to place some logic into the display. For example place
 The way to work with Nextion Displays is:
 
 (1)-- Design the pages in the Nextion editor.
+
 (2)-- Open the build folder (Mebnue files) and store the .tft file of your project on a SD card.
+
 (3)-- Put the SD Card in the Display, power on, the project will be loaded.
-(4)-- On Raspi Side use the Serial Connection in yout code to poste instructions to the display, and receive data from the display. It is touchscreen therefor it is quite helpful to use the inputs of the display in your code.
+
+(4)-- On Raspi Side use the Serial Connection in yout code to poste instructions to the display, and receive data from the display.
+It is touchscreen therefor it is quite helpful to use the inputs of the display in your code.
+
 (5)-- Be aware that all pictures and fonds have to be imported in the Editor and these have to be stored in the DISPLAY! like discribed in 3. You can not use pictures dynamically!!
+
 
 You can download the Nextion Editor here:
 
