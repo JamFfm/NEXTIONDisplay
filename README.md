@@ -47,7 +47,18 @@ https://www.itead.cc/nextion-nx4832t035.html
 
 Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 3.5KByte RAM, 65k colors.
 
+# Wireing the display
+
+![Wireing](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3 Display/MMDVM-Nextion-wiring-for-programming.jpg "BrewNextionDisplay 3.5 Zoll")
+
 # Installation
+
+(1)-- Power off the display. Store the .tft file on a SD Card and push the SD card in the display. Power on the display. There must be only 1 file on the card. 
+Remove SD Card after installation 
+(2)-- load the NEXTIONDisplay addin in the Craftbeerpi addin section.
+
+Maybe the Serical connection has to be turned on at the RASPI Settings.
+
 
 # Usage
 
