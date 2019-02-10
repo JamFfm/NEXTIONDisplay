@@ -1,5 +1,4 @@
-![](https://img.shields.io/badge/CBPi3-Development-yellow.svg)
-
+![](https://img.shields.io/badge/CBPi3-Development-yellow.svg)  ![](https://img.shields.io/github/downloads/JamFfm/NEXTIONDisplay/master/total.svg?style=flat)
 
 # NEXTIONDisplay
 Use Nextion Display on a CraftbeerPi3 instalation.
