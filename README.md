@@ -6,7 +6,7 @@ Use Nextion Display on a CraftbeerPi3 instalation.
 
 This is Alpha and not for use in production installations!
 
-Until now I wrote no code! Only Display design in alpha version!
+Until now code is just in a very first version with known malfunktions! Display design in alpha version!
 
 
 # What for?
@@ -62,16 +62,17 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 
 # Installation
 
-(1)-- Power off the display. Store the .tft file on a SD Card and push the SD card in the display. Power on the display. There must be only 1 file on the card. Remove SD Card after installation.
+(1)-- Power off the display. Store the .tft file via a PC/Mac on a SD Card. Push the SD card in the display. Power on the display. There must be only 1 file on the card. Remove SD Card after installation.
 
-(2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section.
+(2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
 
-Maybe the Serial connection has to be turned on at the RASPI Settings.
+Workaround: Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
+
+
+Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. Go again to the RASPI Settings. Turn on the Serial Console. Leave the Serial Connection turned off.
 Maybe pyserial lib has to be installed if there is an error at import serial:
 
 In commandbox type in: python -m pip install pyserial
-
-
 
 # Usage
 
