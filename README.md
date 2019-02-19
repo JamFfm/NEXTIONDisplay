@@ -40,10 +40,10 @@ The way to work with Nextion Displays is:
 
 (3)-- Put the SD Card in the Display, power on, the project will be loaded.
 
-(4)-- On Raspi Side use the Serial Connection in yout code to poste instructions to the display, and receive data from the display.
+(4)-- On Raspi side use the Serial Connection at your code to poste instructions to the display, and receive data from the display.
 It is touchscreen therefor it is quite helpful to use the inputs of the display in your code.
 
-(5)-- Be aware that all pictures and fonds have to be imported in the Editor and these have to be stored in the DISPLAY! like discribed in 3. You can not use pictures dynamically!!
+(5)-- Be aware that all pictures and fonds have to be imported in the Editor and these have to be stored in the DISPLAY! like described in 3. You can not use pictures dynamically!! But you can change the pictures stored in the display.
 
 
 You can download the Nextion Editor here:
@@ -62,14 +62,16 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 
 # Installation
 
-(1)-- Power off the display. Store the .tft file via a PC/Mac on a SD Card. Push the SD card in the display. Power on the display. There must be only 1 file on the card. Remove SD Card after installation.
+(1)-- Power off the display. Store the .tft file via a PC/Mac on a SD Card in a fat32 system. Push the SD card in the display. Power on the display. There must be only 1 file on the card. Remove SD Card after installation.
 
 (2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
 
 Workaround: Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
 
+(3)-- reboot at least CBPi3
 
-Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. Go again to the RASPI Settings. Turn on the Serial Console. Leave the Serial Connection turned off.
+
+Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. Go again to the RASPI Settings. Turn on the Serial Port. Turn off the Serial console.
 Maybe pyserial lib has to be installed if there is an error at import serial:
 
 In commandbox type in: python -m pip install pyserial
