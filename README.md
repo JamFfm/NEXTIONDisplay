@@ -25,6 +25,7 @@ or
 
 Workaround2:
 
+Keyin on the command box of Raspi
 git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
 
 (3)-- reboot at least CBPi3
