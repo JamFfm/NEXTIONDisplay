@@ -9,6 +9,23 @@ This is Alpha and not for use in production installations!
 Until now code is just in a very first version with known malfunktions! Display design in alpha version!
 
 
+# Installation
+
+(1)-- Power off the display. Store the .tft file via a PC/Mac on a SD Card in a fat32 system. Push the SD card in the display. Power on the display. There must be only 1 file on the card. Remove SD Card after installation.
+
+(2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
+
+Workaround: Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
+
+(3)-- reboot at least CBPi3
+
+
+Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. Go again to the RASPI Settings. Turn on the Serial Port. Turn off the Serial console.
+Maybe pyserial lib has to be installed if there is an error at import serial:
+
+In commandbox type in: python -m pip install pyserial
+
+
 # What for?
 This addin is designed for Craftbeerpi 3.02 and will display mainly temperatures via serial connection to a Color Touch TFT. 
 
@@ -19,6 +36,7 @@ Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which
 ![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/digitmode.jpg "Example Digitscreen")
 
 ![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/BrewGraph.jpg "Example Waveform")
+
 
 # Introduction to Nextion Displays
 
@@ -56,29 +74,16 @@ https://www.itead.cc/nextion-nx4832t035.html
 
 Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 3.5KByte RAM, 65k colors.
 
+
 # Wireing the display
 
 ![Wireing](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/MMDVM-Nextion-wiring-for-programming.jpg "BrewNextionDisplay 3.5 Zoll")
 
-# Installation
-
-(1)-- Power off the display. Store the .tft file via a PC/Mac on a SD Card in a fat32 system. Push the SD card in the display. Power on the display. There must be only 1 file on the card. Remove SD Card after installation.
-
-(2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
-
-Workaround: Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
-
-(3)-- reboot at least CBPi3
-
-
-Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. Go again to the RASPI Settings. Turn on the Serial Port. Turn off the Serial console.
-Maybe pyserial lib has to be installed if there is an error at import serial:
-
-In commandbox type in: python -m pip install pyserial
 
 # Usage
 
 Push the buttons in the startscreen and choose the desired screen.
+
 
 # Parameter
 
@@ -88,7 +93,7 @@ All parameter with the Nextion "flag" will have influence.
 NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is number 1.
 
 
-# Knows problems
+# Known problems
 
 Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
 Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.
@@ -97,17 +102,13 @@ Until now Farenheit is not supported. But will be in further releases.
 
 Still struggeling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented.
 
-
 **Help is welcome**
 
+
 # Fixed Problems
+
 
 # Support
 
 Report issues either in this Git section or at Facebook at the [Craftbeerpi group](https://www.facebook.com/groups/craftbeerpi/)
-
-
-
-
-
 
