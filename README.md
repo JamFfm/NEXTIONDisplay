@@ -78,13 +78,25 @@ In commandbox type in: python -m pip install pyserial
 
 # Usage
 
+Push the buttons in the startscreen and choose the desired screen.
+
 # Parameter
+
+Have a look in the parameters section in ChraftbeerPi Gui.
+All parameter with the Nextion "flag" will have influence.
+
+NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is number 1.
+
 
 # Knows problems
 
-Scale is fixed so you can't see much small temp changes. Ist is an overview to the past 17 min and shows from 0-100°C.
+Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
 Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.
+
 Until now Farenheit is not supported. But will be in further releases.
+
+Still struggeling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented.
+
 
 **Help is welcome**
 
