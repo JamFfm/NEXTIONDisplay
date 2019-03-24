@@ -2,20 +2,30 @@
 
 ![](https://img.shields.io/badge/CBPi%203%20addin-under%20development-yellow.svg)  ![](https://img.shields.io/github/license/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/last-commit/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/NEXTIONDisplay.svg?style=flat)
 
-Use Nextion Display on a CraftbeerPi3 instalation.
+Use Nextion Display on a CraftbeerPi3 installation.
 
-This is Alpha and not for use in production installations!
+This is alpha and not for use in production installations!
 
 Until now code is just in a very first version with known malfunktions! Display design in alpha version!
 
 
 # Installation
 
-(1)-- Power off the display. Store the .tft file via a PC/Mac on a SD Card in a fat32 system. Push the SD card in the display. Power on the display. There must be only 1 file on the card. Remove SD Card after installation.
+(1)-- Power off the display. Store the .tft file via a PC/Mac on a SD Card in a fat32 system. There must be only 1 file on the card. Push the SD card in the display. Power on the display. Remove SD Card after installation. Again poweroff/poweron. 
+
+Now you see the startscreen.
 
 (2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
 
-Workaround: Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
+Workaround1: 
+
+Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
+
+or
+
+Workaround2:
+
+git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
 
 (3)-- reboot at least CBPi3
 
