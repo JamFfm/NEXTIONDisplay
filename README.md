@@ -18,7 +18,7 @@ Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which
 
 ![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/digitmode.jpg "Example Digitscreen")
 
-
+![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/BrewGraph.jpg "Example Waveform")
 
 # Introduction to Nextion Displays
 
@@ -80,7 +80,11 @@ In commandbox type in: python -m pip install pyserial
 
 # Parameter
 
-#Knows problems
+# Knows problems
+
+Scale is fixed so you can't see much small temp changes. Ist is an overview to the past 17 min and shows from 0-100°C.
+Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.
+Until now Farenheit is not supported. But will be in further releases.
 
 **Help is welcome**
 
