@@ -36,6 +36,10 @@ import os, re, thread
 import modules
 import time
 import serial
+import socket #ip adr
+import fcntl  #ip adr
+import struct #ip adr
+from time import gmtime, strftime #time display
 
 def writingBrewCharttoNexion(kettleID):
     
@@ -273,15 +277,54 @@ def TempTargTemp(temptargid):
     #cbpi.app.logger.info("TFTDisplay  - TargTemp: %s" % (targTemp))
     return targTemp
 
+def get_ip(interface):
+    ip_addr = 'Not connected'
+    so = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        ip_addr = socket.inet_ntoa(fcntl.ioctl(so.fileno(), 0x8915, struct.pack('256s', interface[:15]))[20:24])
+    finally:
+        return ip_addr
+    
+def get_version_fo(path):
+    version = ""
+    try:
+        if path is not "":
+            fo = open(path, "r")
+        else:
+            fo = open("/home/pi/craftbeerpi3/config/version.yaml","r")
+        version = fo.read();
+        fo.close()
+    finally:
+        return version
+
+
 @cbpi.initalizer(order=3100)
 def initNexion(app):
 
 
     #end of init    
     
-    @cbpi.backgroundtask(key="Nexionjob", interval=2)
+    @cbpi.backgroundtask(key="Nexionjob", interval=2
+
+                         )
     def Nexionjob(api):
         ## This is the main job
+        if get_ip('wlan0') != 'Not connected':
+            ip = get_ip('wlan0')
+        elif get_ip('eth0') != 'Not connected':
+            ip = get_ip('eth0')
+        elif get_ip('enxb827eb488a6e')!= 'Not connected':
+            ip = get_ip('enxb827eb488a6e')
+        else:
+            ip ='Not connected'
+        iptext = ("IP: %s" % (ip))
+
+        NextionwriteString("t2start", iptext)
+        cbpi_version = "CBPi %s" % (get_version_fo(""))
+        NextionwriteString("t1start", cbpi_version)
+        timestr = ((strftime(u"%Y-%m-%d %H:%M:%S", time.localtime())).ljust(20))
+        NextionwriteString("t3start", timestr)
+        
 
         global kettleID
         kettleID = set_parameter_kettleID()
