@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
+# *-* coding: iso-8859-1 *-*
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -19,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# NextionDisplay Version 0.0.0.2
+# NextionDisplay Version 0.0.0.5
 # Assembled by JamFfm
 #
 
@@ -57,30 +56,34 @@ def writingBrewCharttoNexion(kettleID):
     NextionwriteString("TargTempBrwTxt", textCurrTemp1)
     
     #   Current Kettlename in text field    
-    #kettlename = ("Einkocher"+chr(223)+" Test")
-    kettlename = ("Kettle Name")
-    #kettlename1 = (cbpi.cache.get("kettle")[int(kettleID)].name)
-    #kettlename = str(decode(str(kettlename1)))
-    #cbpi.app.logger.info('NextionDisplay  - KettleNameTxt.txt:%s' % (kettlename1))
-    #kettlename = ('%s' % (cbpi.cache.get("kettle").get(int(kettleID)).name))
-    cbpi.app.logger.info('NextionDisplay  - KettleNameTxt.txt:%s' % (kettlename))
-    
-    NextionwriteString("KettleNameTxt", kettlename)
+    kettlen = kettlename()
+    NextionwriteString("KettleNameTxt", kettlen)
+	
+    #   rest name
+    restn = restname()
+    NextionwriteString("RestNameTxt", restn)
     
 
     #   Overall factor for graphs to change resulution
 
     factor = 1
-    factor2 = 2.0
+    factor2 = 20.2
 
     #   writing current Temp to wave    
     if float(Temp(kettleID)) < 100:
-        TextDigit = ("%5.2f" % (float(Temp(kettleID))*((factor2*factor)-0)))
+        TextDigit = ("%5.2f" % ((float(Temp(kettleID))-20)*((factor2*factor)-0)))
     else:
         TextDigit = ("%6.2f" % (float(Temp(kettleID))*((factor2*factor)-0)))
 
+    #20-30 C
+    NextionwriteString("tmax", "30%s" % (chr(176)+"C"))
+    NextionwriteString("tavarage", "25%s" % (chr(176)+"C"))
+    NextionwriteString("tmin", "20%s" % (chr(176)+"C"))
+    #TextDigit = (TextDigit-20)*20.2
+            
+
     string=(str(TextDigit)[:-3])
-    cbpi.app.logger.info('NextionDisplay  - CurrTempWave: %s' % (string))
+    #cbpi.app.logger.info('NextionDisplay  - CurrTempWave: %s' % (string))
     #Wave ID 1, Channnel 0, Temp as string
     NextionwriteWave(1, 0, string)
 
@@ -90,7 +93,7 @@ def writingBrewCharttoNexion(kettleID):
     else:
         TextDigit = ("%6.2f" % (float(TempTargTemp(kettleID))*((factor2*factor)-0)))
     string1=(str(TextDigit)[:-3])
-    cbpi.app.logger.info('NextionDisplay  - TargetTempWave: %s' % (string1))
+    #cbpi.app.logger.info('NextionDisplay  - TargetTempWave: %s' % (string1))
     #Wave ID 1, Channnel 1, Temp as string
     NextionwriteWave(1, 2, string1)
 
@@ -99,18 +102,18 @@ def writingDigittoNextion(kettleID):
     #   Current Temperature in text field
     TextDigitTxt2 = ("%6.2f%s" % (float(Temp(kettleID)), (chr(176)+"C")))
     textCurrTemp2 = str(TextDigitTxt2)
-    cbpi.app.logger.info('NextionDisplay  - CurrTempTxt.txt:%s' % (textCurrTemp2))
+    #cbpi.app.logger.info('NextionDisplay  - CurrTempTxt.txt:%s' % (textCurrTemp2))
     NextionwriteString("CurrTempTxt", textCurrTemp2)
 
     #   Target Temp in Text Field    
     TextDigitTxt3 = ("%6.2f%s" % (float(TempTargTemp(kettleID)), (chr(176)+"C")))
     textCurrTemp3 = str(TextDigitTxt3)
-    cbpi.app.logger.info('NextionDisplay  - TargTempTxt.txt:%s' % (textCurrTemp3))
+    #cbpi.app.logger.info('NextionDisplay  - TargTempTxt.txt:%s' % (textCurrTemp3))
     NextionwriteString("TargetTempTxt", textCurrTemp3)
     
     #   Current Kettlenumber in text field
     Digitnumber = int(kettleID)    
-    cbpi.app.logger.info('NextionDisplay  - KettleNumb.val:%s' % (Digitnumber))
+    #cbpi.app.logger.info('NextionDisplay  - KettleNumb.val:%s' % (Digitnumber))
     NextionwriteNumber("KettleNumb", Digitnumber)
 
 def writingFermCharttoNexion(kettleID):
@@ -119,17 +122,17 @@ def writingFermCharttoNexion(kettleID):
     #   Current Temperature in text field
     TextDigitTxt0 = ("%6.2f%s" % (float(Temp(kettleID)), (chr(176)+"C")))
     textCurrTemp0 = str(TextDigitTxt0)
-    cbpi.app.logger.info('NextionDisplay  - CurrTempBrwTxt.txt:%s' % (textCurrTemp0))
+    #cbpi.app.logger.info('NextionDisplay  - CurrTempBrwTxt.txt:%s' % (textCurrTemp0))
     NextionwriteString("CurrTempBrwTxt", textCurrTemp0)
 
     #   Target Temp in Text Field    
     TextDigitTxt1 = ("%6.2f%s" % (float(TempTargTemp(kettleID)), (chr(176)+"C")))
     textCurrTemp1 = str(TextDigitTxt1)
-    cbpi.app.logger.info('NextionDisplay  - TargTempBrwTxt.txt:%s' % (textCurrTemp1))
+    #cbpi.app.logger.info('NextionDisplay  - TargTempBrwTxt.txt:%s' % (textCurrTemp1))
     NextionwriteString("TargTempBrwTxt", textCurrTemp1)
     
     #   Current Kettlename in text field    
-    kettlename = ("Einkocher Test")
+    kettlename = ("fermenter Test")
     #kettlename = (cbpi.cache.get("kettle")[int(kettleID)].name)
     #kettlename = str(decode(str(kettlename1)))
     cbpi.app.logger.info('NextionDisplay  - KettleNameTxt.txt:%s' % (kettlename))
@@ -153,7 +156,7 @@ def writingFermCharttoNexion(kettleID):
         TextDigit = ("%6.2f" % (float(Temp(kettleID))*((factor2*factor)-0)))
 
     string=(str(TextDigit)[:-3])
-    cbpi.app.logger.info('NextionDisplay  - CurrTempWave: %s' % (string))
+    #cbpi.app.logger.info('NextionDisplay  - CurrTempWave: %s' % (string))
     #Wave ID 2, Channnel 0, Temp as string
     NextionwriteWave(2, 0, string)
 
@@ -163,7 +166,7 @@ def writingFermCharttoNexion(kettleID):
     else:
         TextDigit = ("%6.2f" % (float(TempTargTemp(kettleID))*((2.2*factor)-0)))
     string1=(str(TextDigit)[:-3])
-    cbpi.app.logger.info('NextionDisplay  - TargetTempWave: %s' % (string1))
+    #cbpi.app.logger.info('NextionDisplay  - TargetTempWave: %s' % (string1))
     #Wave ID 1, Channnel 0, Temp as string
     NextionwriteWave(1, 3, string1)
 
@@ -190,7 +193,7 @@ def NextionwriteString(TextLableName, string):
 
 def NextionwriteWave(WaveID, Channnel, intValue):
     command = ('add %s,%s,%s' %(WaveID, Channnel, intValue))
-    cbpi.app.logger.info('NextionDisplay  - command Wave:%s' % (command))
+    #cbpi.app.logger.info('NextionDisplay  - command Wave:%s' % (command))
     ser = serial.Serial(
         port='/dev/ttyS0',
         baudrate = 9600,
@@ -208,7 +211,7 @@ def NextionwriteWave(WaveID, Channnel, intValue):
 
 def NextionwriteNumber(NumberLableName, integer):
     command = ('%s.val=%s' %(NumberLableName, integer))
-    cbpi.app.logger.info('NextionDisplay  - command Number:%s' % (command))
+    #cbpi.app.logger.info('NextionDisplay  - command Number:%s' % (command))
     ser = serial.Serial(
         port='/dev/ttyS0',
         baudrate = 9600,
@@ -224,17 +227,16 @@ def NextionwriteNumber(NumberLableName, integer):
     ser.write(chr(255))
     ser.close()
 
-#   Decoding
-def decode(string):
-    #html = string
-    #decoded_str = string.decode("windows-1252")
-    #encoded_str = decoded_str.encode("utf8")
-    encoded_str = string.encode('ascii', 'ignore')
-    
-    cbpi.app.logger.info('NextionDisplay  - encoded_str:%s' % (encoded_str))
-    
-    return encoded_str
 
+def cbidecode(string):
+    
+    cbpi.app.logger.info('NextionDisplay  - string:%s' % (string))
+    udata=string.encode("iso-8859-1")
+    asciidata=udata.decode("ascii", "ignore")
+    
+    cbpi.app.logger.info('NextionDisplay  - encoded_str:%s' % (asciidata))
+    
+    return asciidata.encode("iso-8859-1")
 
     
 #def CurrentFermTemp():
@@ -243,10 +245,25 @@ def decode(string):
 #def TargetFernTemp():
     #
 
-#def KettleName():
-    #
-#def RestName():
-    #
+def kettlename():
+    kettlename = ""
+    kettlename = ('%s' % (cbpi.cache.get("kettle").get(int(kettleID)).name))  
+    #cbpi.app.logger.info('NextionDisplay  - KettleNameTxt.txt:%s' % (kettlename))
+    kettlename = cbidecode(kettlename)
+    #cbpi.app.logger.info('NextionDisplay  - decodeKettleNameTxt.txt:%s' % (kettlename))
+    return kettlename
+
+def restname():
+    restname = ""
+    s = cbpi.cache.get("active_step")
+    if s is not None:
+        restname = s.name
+        #cbpi.app.logger.info('NextionDisplay  - restname:%s' % (restname))
+        restname = cbidecode(restname)
+        return restname
+    else:
+        return "no active rest"
+	
 #def FermenterName():
     #
 #def Beername():
@@ -259,8 +276,6 @@ def Temp(kkid):
     curTemp = ("%6.2f" % (float(current_sensor_value_id3)))
     #cbpi.app.logger.info("NEXTIONDisplay  - Temp: %s" % (curTemp))
     return curTemp
-
-
 
 def set_parameter_kettleID():  
     kettleid = cbpi.get_config_parameter("NEXTION_Kettle_ID", None)
@@ -278,12 +293,13 @@ def TempTargTemp(temptargid):
     return targTemp
 
 def get_ip(interface):
-    ip_addr = 'Not connected'
+    ip_addr = "Not connected"
     so = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         ip_addr = socket.inet_ntoa(fcntl.ioctl(so.fileno(), 0x8915, struct.pack('256s', interface[:15]))[20:24])
     finally:
-        return ip_addr
+        pass
+    return ip_addr
     
 def get_version_fo(path):
     version = ""
@@ -299,15 +315,14 @@ def get_version_fo(path):
 
 
 @cbpi.initalizer(order=3100)
-def initNexion(app):
+def initNextion(app):
 
 
     #end of init    
     
-    @cbpi.backgroundtask(key="Nexionjob", interval=2
-
-                         )
-    def Nexionjob(api):
+    @cbpi.backgroundtask(key="Nexionjob", interval=2)
+    
+    def Nextionjob(api):
         ## This is the main job
         if get_ip('wlan0') != 'Not connected':
             ip = get_ip('wlan0')
@@ -316,15 +331,21 @@ def initNexion(app):
         elif get_ip('enxb827eb488a6e')!= 'Not connected':
             ip = get_ip('enxb827eb488a6e')
         else:
-            ip ='Not connected'
-        iptext = ("IP: %s" % (ip))
-
-        NextionwriteString("t2start", iptext)
+            ip ="Not connected"
+        
+        
         cbpi_version = "CBPi %s" % (get_version_fo(""))
+        NextionwriteString("t1startfake", cbpi_version) #for any reason the first value will be dropped
         NextionwriteString("t1start", cbpi_version)
+        
         timestr = ((strftime(u"%Y-%m-%d %H:%M:%S", time.localtime())).ljust(20))
         NextionwriteString("t3start", timestr)
+
+        iptext = ""
+        iptext = "IP: %s" % ip
+        NextionwriteString("t2start", iptext)
         
+              
 
         global kettleID
         kettleID = set_parameter_kettleID()
