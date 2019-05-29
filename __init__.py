@@ -33,9 +33,11 @@ import serial
 import socket  # ip adr
 import fcntl   # ip adr
 import struct  # ip adr
-from time import gmtime, strftime  # Time display
+# from time import gmtime, strftime  # Time display
+from time import strftime  # Time display
 
 liste = []
+listetarget =[]
 global max_value_old
 max_value_old = 0
 global min_value_old
@@ -167,6 +169,7 @@ def writewave(kettleID):
     #   rest name
     restn = restname()
     NextionwriteString("RestNameTxt", restn)
+    #   build liste
     if len(liste) < 406:
         liste.append(temp0)
     else:
@@ -175,14 +178,22 @@ def writewave(kettleID):
         cbpi.app.logger.info('NextionDisplay  - TempListe bigger 407:%s' % (len(liste)))
     # cbpi.app.logger.info('NextionDisplay  - TempListe:%s' % (liste))
     cbpi.app.logger.info('NextionDisplay  - TempListe len(liste):%s' % (len(liste)))
-    max_value = (max(liste)+0.5)
-    min_value = (min(liste)-0.5)
+    # build liste targettemp
+    if len(listetarget) < 406:
+        listetarget.append(targettemp)
+    else:
+        del listetarget[0]
+        listetarget.append(targettemp)
+    cbpi.app.logger.info('NextionDisplay  - targetListe len(listetarget):%s' % (len(listetarget)))
+    # min max labels at scale
+    max_value = (max(liste)+0.2)
+    min_value = (min(liste)-0.2)
     NextionwriteString("tmax", "%s%s" % (max_value, (chr(176)+"C")))
     NextionwriteString("tmin", "%s%s" % (min_value, (chr(176)+"C")))
     NextionwriteString("tavarage", "%s%s" % (round(((max_value+min_value)/2), 2), (chr(176)+"C")))
     # get the factor
     offset = (max_value - min_value)
-    xpixel = 202
+    xpixel = 202  # the height of the wave on Nextion
     cbpi.app.logger.info('NextionDisplay  -         check 1: offset: %s' % offset)
     factor2 = (xpixel / offset)
     cbpi.app.logger.info('NextionDisplay  -         check 2: factor2: %s' % factor2)
@@ -190,29 +201,35 @@ def writewave(kettleID):
     global max_value_old
     if max_value != max_value_old or min_value != min_value_old:
         cbpi.app.logger.info('NextionDisplay  - rewrite check 3')
-        NextionwriteClear(1, 0)
-        cbpi.app.logger.info('NextionDisplay  - rewrite check 4')
+        NextionwriteClear(1, 0)  # BrewTemp
+        NextionwriteClear(1, 2)  # TargetTemp
         i = 0
         while i < len(liste):
             cbpi.app.logger.info('NextionDisplay  - liste:%s' % (liste[i]))
-            if float(liste[i]) < 100:
-                TextDigit = ("%5.2f" % float((liste[i] - min_value) * factor2))
-            else:
-                TextDigit = ("%6.2f" % float((liste[i] - min_value) * factor2))
-            pass
-            string = (str(round(float(TextDigit)))[:-2])
+            digit = (round(float((liste[i] - min_value) * factor2), 2))
+            string = (str(round(float(digit)))[:-2])
             NextionwriteWave(1, 0, string)
+            #  targettemp
+            target = (round(float((listetarget[i] - min_value) * factor2), 2))
+            tstring = (str(round(float(target)))[:-2])
+            if target < xpixel:  #do not write target line if not in temp range
+                NextionwriteWave(1, 2, tstring)
+            else:
+                pass
             i += 1
-            cbpi.app.logger.info('NextionDisplay  - Textdigit, Textdigit string: %s, %s' % (TextDigit, string))
+            cbpi.app.logger.info('NextionDisplay  - digit, string: %s, %s' % (digit, string))
     else:
-        if temp0 < 100:
-            TextDigit = ("%5.2f" % float((temp0 - min_value) * factor2))
-        else:
-            TextDigit = ("%6.2f" % float((temp0 - min_value) * factor2))
-        pass
-        string = (str(round(float(TextDigit)))[:-2])
+        digit = (round(float((temp0 - min_value) * factor2), 2))
+        string = (str(round(float(digit)))[:-2])
         NextionwriteWave(1, 0, string)
-        cbpi.app.logger.info('NextionDisplay  - Textdigit, Textdigit string: %s, %s' % (TextDigit, string))
+        cbpi.app.logger.info('NextionDisplay  - digit, string: %s, %s' % (digit, string))
+        # target Temp
+        target = (round(float((targettemp - min_value) * factor2), 2))
+        tstring = (str(round(float(target)))[:-2])
+        if target < xpixel:  # do not write target line if not in temp range
+            NextionwriteWave(1, 2, tstring)
+        else:
+            pass
     pass
     cbpi.app.logger.info('NextionDisplay  - max and min value: %s, %s' % (max_value, min_value))
 
@@ -222,11 +239,11 @@ def writewave(kettleID):
     min_value_old = min_value
 
 
-def CurrentFermTemp():
+def currentfermtemp():
     pass
 
 
-def TargetFernTemp():
+def targetfermtemp():
     pass
 
 
@@ -263,7 +280,10 @@ def restname():
 def FermenterName():
     pass
 
+
 def Beername():
+    # beername = modules.fermenter.Fermenter.brewname
+    # return beername
     pass
 
 
@@ -320,7 +340,7 @@ def initNextion(app):
 
     # end of init
 
-    @cbpi.backgroundtask(key="Nexionjob", interval=2)
+    @cbpi.backgroundtask(key="Nexionjob", interval=4)
 
     def Nextionjob(api):
         # This is the main job
@@ -349,7 +369,6 @@ def initNextion(app):
         global kettleID
         kettleID = set_parameter_kettleID()
 
-        # writingBrewCharttoNexion(kettleID)
         writingDigittoNextion(kettleID)
         writewave(kettleID)
 
