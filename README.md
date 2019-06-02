@@ -11,25 +11,24 @@ Until now code is just in a very first version with known malfunktions! Display 
 
 # Installation
 
-(1)-- Power off the display. Store the .tft file in this repository via a PC/Mac on a SD Card in a fat32 system (usually SD card max 32GB). There must be only 1 file on the card. Push the SD card in the display. Power on the display. Remove SD Card after installation. Again poweroff/poweron. 
-
+1. Power off the display. Store the .tft file in this repository via a PC/Mac on a SD Card in a fat32 system (usually SD card max 32GB). There must be only 1 file on the card. Push the SD card in the display. Power on the display. Remove SD Card after installation. Again poweroff/poweron. 
 Now you see the new startscreen.
 
-(2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
+2. Load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
 
-Workaround1: 
+    Workaround1: 
 
-Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
+    Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
 
-or
+    or
 
-Workaround2:
+    Workaround2:
 
-Keyin on the command box of Raspi
+    Key in on the command box of Raspi
 
-git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
+    git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
 
-(3)-- reboot at least CBPi3
+3. Reboot at least CBPi3
 
 
 Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. Go again to the RASPI Settings. Turn on the Serial Port. Turn off the Serial console.
@@ -55,25 +54,25 @@ Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which
 The Nextion displays are HMI displays which is not equal to HDMI!!
 There is a Nextion editor which helps to design the Display. It is possible to build several display pages.
 The amout of pages is only limited to the amount of memory.
-In the Editor you can place pictures, fonts , buttons, text Lables like in Visual Studio. Just way morte simple. 
-But powerful! From the Raspi side it is possible to place data to a spezial component placed on the page by the editor.
-You just have to use the serial connection. To place a text in a textlabel it is like t0.txt="your Text".
+In the Editor you can place pictures, fonts , buttons, text labels like in Visual Studio. Just way more simple. 
+But powerful! From the Raspi side it is possible to place data to a special component placed on the page by the editor.
+You just have to use the serial connection. To place a text in a text labels it is like t0.txt="your Text".
 To close sending you have to terminate like three times x0ff.
 
-There is the possibility to place some logic into the display. For example place a button on a page and programm page 2 at release event. The page 2 will be displayed without the help of the Raspi.
+There is the possibility to place some logic into the display. For example place a button on a page and program page 2 at release event. The page 2 will be displayed without the help of the Raspi.
 
 The way to work with Nextion Displays is:
 
-(1)-- Design the pages in the Nextion editor.
+1. Design the pages in the Nextion editor.
 
-(2)-- Open the build folder (Mebnue files) and store the .tft file of your project on a SD card.
+2. Open the build folder (Menu-> files) and store the .tft file of your project on a SD card.
 
-(3)-- Put the SD Card in the Display, power on, the project will be loaded.
+3. Put the SD Card in the Display, power on, the project will be loaded.
 
-(4)-- On Raspi side use the Serial Connection at your code to poste instructions to the display, and receive data from the display.
-It is touchscreen therefor it is quite helpful to use the inputs of the display in your code.
+4. On Raspi side use the Serial Connection at your code to poste instructions to the display, and receive data from the display.
+    It is touchscreen therefor it is quite helpful to use the inputs of the display in your code.
 
-(5)-- Be aware that all pictures and fonds have to be imported in the Editor and these have to be stored in the DISPLAY! like described in 3. You can not use pictures dynamically!! But you can change the pictures stored in the display.
+5. Be aware that all pictures and fonds have to be imported in the Editor and these have to be stored in the DISPLAY! like described in 3. You can not use pictures dynamically!! But you can change the pictures stored in the display.
 
 
 You can download the Nextion Editor here:
@@ -97,11 +96,11 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 Push the buttons in the startscreen and choose the desired screen.
 1. There is a screen with big digits with current temperature and the target temperature.
 
-2. There is a graph which will show the temperature of the past 35 min and its coresponding target temperature. Attention: If target temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active kettle and the name of the active rest is shown.
+2. There is a graph which will show the temperature of the past 35 min and its corresponding target temperature. Attention: If target temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active kettle and the name of the active rest is shown.
 
 # Parameter
 
-Have a look in the parameters section in ChraftbeerPi Gui.
+Have a look in the parameters section in CraftbeerPi Gui.
 All parameter with the Nextion "flag" will have influence.
 
 NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is number 1.
@@ -111,11 +110,11 @@ NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is 
 
 The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.
 
-While pushing clear-button the min and max values are not deleated.
+While pushing clear-button the min and max values are not deleted.
 
-Because of a lag of knowledge the rebuld of the graph in a new temperature scale is slow. Will fix it with higher baud rate of serial connection and the NEXTION addt funktion in the future.
+Because of a lag of knowledge the rebuild of the graph in a new temperature scale is slow. Will fix it with higher baud rate of serial connection and the NEXTION addt function in the future.
 
-Until now Farenheit is not supported. But will be in further releases.
+Until now fahrenheit is not supported. But will be in further releases.
 
 **Help is welcome**
 
@@ -125,7 +124,7 @@ Until now Farenheit is not supported. But will be in further releases.
 Fixed: Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
 Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.
 
-Still struggeling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented.
+Still struggling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented.
 
 # Support
 
