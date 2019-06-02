@@ -33,11 +33,11 @@ import serial
 import socket  # ip adr
 import fcntl   # ip adr
 import struct  # ip adr
-# from time import gmtime, strftime  # Time display
 from time import strftime  # Time display
 
+TERMINATOR = bytearray([0xFF, 0xFF, 0xFF])
 liste = []
-listetarget =[]
+listetarget = []
 global max_value_old
 max_value_old = 0
 global min_value_old
@@ -69,7 +69,7 @@ def NextionwriteString(TextLableName, string):
     :param TextLableName: name of the textlable on the Nextion
     :param string: the string to write in this lable
     """
-    command = ('%s.txt="%s"' %(TextLableName, string))
+    command = ('%s.txt="%s"' % (TextLableName, string))
     cbpi.app.logger.info('NextionDisplay  - command Txt:%s' % command)
     ser = serial.Serial(
         port='/dev/ttyS0',
@@ -80,9 +80,7 @@ def NextionwriteString(TextLableName, string):
         timeout=1
         )
     ser.write(command)
-    ser.write(chr(255))
-    ser.write(chr(255))
-    ser.write(chr(255))
+    ser.write(TERMINATOR)
     ser.close()
 
 
@@ -98,9 +96,7 @@ def NextionwriteWave(WaveID, Channnel, intValue):
         timeout=1
         )
     ser.write(command)
-    ser.write(chr(255))
-    ser.write(chr(255))
-    ser.write(chr(255))
+    ser.write(TERMINATOR)
     ser.close()
 
 
@@ -116,9 +112,7 @@ def NextionwriteNumber(NumberLableName, integer):
         timeout=1
         )
     ser.write(command)
-    ser.write(chr(255))
-    ser.write(chr(255))
-    ser.write(chr(255))
+    ser.write(TERMINATOR)
     ser.close()
 
 
@@ -134,9 +128,7 @@ def NextionwriteClear(WaveID, channel):
         timeout=1
         )
     ser.write(command)
-    ser.write(chr(255))
-    ser.write(chr(255))
-    ser.write(chr(255))
+    ser.write(TERMINATOR)
     ser.close()
 
 
@@ -194,9 +186,9 @@ def writewave(kettleID):
     # get the factor
     offset = (max_value - min_value)
     xpixel = 202  # the height of the wave on Nextion
-    cbpi.app.logger.info('NextionDisplay  -         check 1: offset: %s' % offset)
+    # cbpi.app.logger.info('NextionDisplay  -         check 1: offset: %s' % offset)
     factor2 = (xpixel / offset)
-    cbpi.app.logger.info('NextionDisplay  -         check 2: factor2: %s' % factor2)
+    # cbpi.app.logger.info('NextionDisplay  -         check 2: factor2: %s' % factor2)
     global min_value_old
     global max_value_old
     if max_value != max_value_old or min_value != min_value_old:
@@ -210,10 +202,12 @@ def writewave(kettleID):
             string = (str(round(float(digit)))[:-2])
             NextionwriteWave(1, 0, string)
             #  targettemp
+            cbpi.app.logger.info('NextionDisplay  - listetarget:%s' % (listetarget[i]))
             target = (round(float((listetarget[i] - min_value) * factor2), 2))
             tstring = (str(round(float(target)))[:-2])
-            if target < xpixel:  #do not write target line if not in temp range
+            if 0 < target < xpixel:  # do not write target line if not in temp/screen range
                 NextionwriteWave(1, 2, tstring)
+                cbpi.app.logger.info('NextionDisplay  - target, tstring: %s, %s' % (target, tstring))
             else:
                 pass
             i += 1
@@ -226,12 +220,13 @@ def writewave(kettleID):
         # target Temp
         target = (round(float((targettemp - min_value) * factor2), 2))
         tstring = (str(round(float(target)))[:-2])
-        if target < xpixel:  # do not write target line if not in temp range
+        if 0 < target < xpixel:  # do not write target line if not in temp/ screen range
             NextionwriteWave(1, 2, tstring)
+            cbpi.app.logger.info('NextionDisplay  - target, tstring: %s, %s' % (target, tstring))
         else:
             pass
     pass
-    cbpi.app.logger.info('NextionDisplay  - max and min value: %s, %s' % (max_value, min_value))
+    # cbpi.app.logger.info('NextionDisplay  - max and min value: %s, %s' % (max_value, min_value))
 
     global max_value_old
     max_value_old = max_value
