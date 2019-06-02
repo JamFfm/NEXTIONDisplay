@@ -11,9 +11,9 @@ Until now code is just in a very first version with known malfunktions! Display 
 
 # Installation
 
-(1)-- Power off the display. Store the .tft file via a PC/Mac on a SD Card in a fat32 system. There must be only 1 file on the card. Push the SD card in the display. Power on the display. Remove SD Card after installation. Again poweroff/poweron. 
+(1)-- Power off the display. Store the .tft file in this repository via a PC/Mac on a SD Card in a fat32 system (usually SD card max 32GB). There must be only 1 file on the card. Push the SD card in the display. Power on the display. Remove SD Card after installation. Again poweroff/poweron. 
 
-Now you see the startscreen.
+Now you see the new startscreen.
 
 (2)-- load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
 
@@ -80,7 +80,7 @@ You can download the Nextion Editor here:
 
 https://nextion.itead.cc/resources/download/nextion-editor/
 
-In this addon I use the following Display:
+In this addon I use the following display:
 
 https://www.itead.cc/nextion-nx4832t035.html
 
@@ -95,7 +95,9 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 # Usage
 
 Push the buttons in the startscreen and choose the desired screen.
+1. There is a screen with big digits with current temperature and the target temperature.
 
+2. There is a graph which will show the temperature of the past 35 min and its coresponding target temperature. Attention: If target temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active kettle and the name of the active rest is shown.
 
 # Parameter
 
@@ -107,18 +109,23 @@ NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is 
 
 # Known problems
 
-Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
-Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.
+The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.
+
+While pushing clear-button the min and max values are not deleated.
+
+Because of a lag of knowledge the rebuld of the graph in a new temperature scale is slow. Will fix it with higher baud rate of serial connection and the NEXTION addt funktion in the future.
 
 Until now Farenheit is not supported. But will be in further releases.
-
-Still struggeling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented.
 
 **Help is welcome**
 
 
 # Fixed Problems
 
+Fixed: Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
+Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.
+
+Still struggeling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented.
 
 # Support
 
