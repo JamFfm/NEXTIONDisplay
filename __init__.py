@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# NextionDisplay Version 0.0.0.9
+# NextionDisplay Version 0.0.0.10
 # Assembled by JamFfm
 #
 # sudo pip install pyserial         # install serial unlikely you have to
@@ -34,14 +34,37 @@ import socket  # ip adr
 import fcntl   # ip adr
 import struct  # ip adr
 from time import strftime  # Time display
+from time import sleep
+import threading
+# import nx_lib as nxlib
 
 TERMINATOR = bytearray([0xFF, 0xFF, 0xFF])
+BAUD = 38400   # for new monitor please put 9600 and then run nx_setsys('bauds', newBAUD)
+TIMEOUT = 0.1
 liste = []
 listetarget = []
 global max_value_old
 max_value_old = 0
 global min_value_old
 min_value_old = 0
+
+
+def nx_setsys(sysvar, value):  # Set system variables. sysvar as text. example: sysvar='dim'
+    # Possible commands: 'bkcmd', 'dp', 'dim', 'dims', 'baud', 'bauds', 'ussp', 'thsp', 'thup', 'delay', 'sleep'
+    # see instruction set of NEXTION device to see possible values for each system variable
+    setdisplay = ('%s=%s' % (sysvar, str(value)))
+    ser = serial.Serial(
+        port='/dev/ttyS0',
+        baudrate=BAUD,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        timeout=TIMEOUT
+    )
+    cbpi.app.logger.info('NextionDisplay  - nx_setsys:%s' % (setdisplay))
+    ser.write(setdisplay)
+    ser.write(TERMINATOR)
+    ser.close()
 
 
 def writingDigittoNextion(kettleID):
@@ -68,16 +91,17 @@ def NextionwriteString(TextLableName, string):
     """
     :param TextLableName: name of the textlable on the Nextion
     :param string: the string to write in this lable
+    use like NextionwriteString("TextLableName", "string")
     """
     command = ('%s.txt="%s"' % (TextLableName, string))
     cbpi.app.logger.info('NextionDisplay  - command Txt:%s' % command)
     ser = serial.Serial(
         port='/dev/ttyS0',
-        baudrate=9600,
+        baudrate=BAUD,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS,
-        timeout=1
+        timeout=TIMEOUT
         )
     ser.write(command)
     ser.write(TERMINATOR)
@@ -89,11 +113,11 @@ def NextionwriteWave(WaveID, Channnel, intValue):
     # cbpi.app.logger.info('NextionDisplay  - command Wave:%s' % command)
     ser = serial.Serial(
         port='/dev/ttyS0',
-        baudrate=9600,
+        baudrate=BAUD,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS,
-        timeout=1
+        timeout=TIMEOUT
         )
     ser.write(command)
     ser.write(TERMINATOR)
@@ -101,15 +125,15 @@ def NextionwriteWave(WaveID, Channnel, intValue):
 
 
 def NextionwriteNumber(NumberLableName, integer):
-    command = ('%s.val=%s' %(NumberLableName, integer))
+    command = ('%s.val=%s' % (NumberLableName, integer))
     # cbpi.app.logger.info('NextionDisplay  - command Number:%s' % command)
     ser = serial.Serial(
         port='/dev/ttyS0',
-        baudrate=9600,
+        baudrate=BAUD,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS,
-        timeout=1
+        timeout=TIMEOUT
         )
     ser.write(command)
     ser.write(TERMINATOR)
@@ -117,15 +141,15 @@ def NextionwriteNumber(NumberLableName, integer):
 
 
 def NextionwriteClear(WaveID, channel):
-    command = ('cle %s,%s' %(WaveID, channel))
+    command = ('cle %s,%s' % (WaveID, channel))
     # cbpi.app.logger.info('NextionDisplay  - command Number:%s' % command)
     ser = serial.Serial(
         port='/dev/ttyS0',
-        baudrate=9600,
+        baudrate=BAUD,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS,
-        timeout=1
+        timeout=TIMEOUT
         )
     ser.write(command)
     ser.write(TERMINATOR)
@@ -197,12 +221,12 @@ def writewave(kettleID):
         NextionwriteClear(1, 2)  # TargetTemp
         i = 0
         while i < len(liste):
-            cbpi.app.logger.info('NextionDisplay  - liste:%s' % (liste[i]))
+            # cbpi.app.logger.info('NextionDisplay  - liste:%s' % (liste[i]))
             digit = (round(float((liste[i] - min_value) * factor2), 2))
             string = (str(round(float(digit)))[:-2])
             NextionwriteWave(1, 0, string)
             #  targettemp
-            cbpi.app.logger.info('NextionDisplay  - listetarget:%s' % (listetarget[i]))
+            # cbpi.app.logger.info('NextionDisplay  - listetarget:%s' % (listetarget[i]))
             target = (round(float((listetarget[i] - min_value) * factor2), 2))
             tstring = (str(round(float(target)))[:-2])
             if 0 < target < xpixel:  # do not write target line if not in temp/screen range
@@ -271,12 +295,13 @@ def restname():
         return restname
     else:
         return "no active rest"
+    pass
 
-def FermenterName():
+def ferm_name():
     pass
 
 
-def Beername():
+def ferm_beername():
     # beername = modules.fermenter.Fermenter.brewname
     # return beername
     pass
@@ -300,10 +325,10 @@ def set_parameter_kettleID():
 
 
 def TempTargTemp(temptargid):
-    # cbpi.app.logger.info("TFTDisplay  - Target Temp detect")
+    # cbpi.app.logger.info("NEXTIONDisplay  - Target Temp detect")
     current_sensor_value_temptargid = cbpi.cache.get("kettle")[(int(temptargid))].target_temp
     targTemp = ("%6.2f" % (float(current_sensor_value_temptargid)))
-    # cbpi.app.logger.info("TFTDisplay  - TargTemp: %s" % (targTemp))
+    # cbpi.app.logger.info("NEXTIONDisplay  - TargTemp: %s" % (targTemp))
     return targTemp
 
 
@@ -330,15 +355,55 @@ def get_version_fo(path):
         return version
 
 
+def detect_touch():
+    look_touch = 3  # in seconds
+    # print("detecting serial every {} second(s) ...".format(look_touch))
+    cbpi.app.logger.info("NextionDisplay  - detect_touch passed")
+    while True:
+        ser = serial.Serial(
+            port='/dev/ttyS0',
+            baudrate=38400,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=0
+            )
+        cbpi.app.logger.info("NextionDisplay  - detect_touch serial passed")
+        # touch = ser.read_until(TERMINATOR)
+        touch = ser.readline()
+        cbpi.app.logger.info("NextionDisplay  - touch:%s" % str(touch))
+        # cbpi.app.logger.info("NextionDisplay  - touch passed")
+        #if hex(touch[0]) == "0x65":  # touch event. If it's empty, do nothing
+        #    pageID_touch = touch[1]
+        #    compID_touch = touch[2]
+        #    event_touch = touch[3]
+       #     cbpi.app.logger.info("NextionDisplay  - page:%s, component:%s, event:%s" % (pageID_touch, compID_touch, event_touch))
+            # print("page= {}, component= {}, event= {}".format(pageID_touch, compID_touch, event_touch))
+        #    if (pageID_touch, compID_touch) == (1, 5):  # clear (comp5) in page 1 is pressed
+        #        NextionwriteString("RestNameTxt", "Reset")
+                # liste = []
+                # stop the reading thread
+
+        #while 1:
+        #    x = ser.readline()
+         #   print (x)
+        #ser.close()
+        sleep(look_touch)  ### timeout the bigger the larger the chance of missing a push
+
+
 @cbpi.initalizer(order=3100)
 def initNextion(app):
-
+    # nx_setsys('bauds', 38400)
+    # nx_setsys('bkcmd', 0)
+    cbpi.app.logger.info("NEXTIONDisplay  - init passed")
     # end of init
 
-    @cbpi.backgroundtask(key="Nexionjob", interval=4)
+    @cbpi.backgroundtask(key="Nextionjob", interval=4)
+
 
     def Nextionjob(api):
         # This is the main job
+
         if get_ip('wlan0') != 'Not connected':
             ip = get_ip('wlan0')
         elif get_ip('eth0') != 'Not connected':
@@ -369,3 +434,7 @@ def initNextion(app):
 
         # writingFermCharttoNexion(kettleID)
 
+        # THREAD - DETECT push buttons
+        # t_serialread = threading.Thread(target=detect_touch, name='read serial', args=())
+        # t_serialread.start()
+        # cbpi.app.logger.info("NextionDisplay  - threads Thread started")
