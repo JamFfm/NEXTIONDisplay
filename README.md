@@ -1,6 +1,6 @@
 # NEXTIONDisplay
 
-![](https://img.shields.io/badge/CBPi%203%20addin-under%20development-yellow.svg)  ![](https://img.shields.io/github/license/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/last-commit/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/NEXTIONDisplay.svg?style=flat)
+![](https://img.shields.io/badge/CBPi%20addin-under%20development_for_V3-yellow.svg)  ![](https://img.shields.io/github/license/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/last-commit/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/NEXTIONDisplay.svg?style=flat)
 
 Use Nextion Display on a CraftbeerPi3 installation.
 
@@ -18,7 +18,7 @@ Now you see the new startscreen.
 
     Workaround1: 
 
-    Copy the NEXTIONDisplay folder to /home/pi/craftbeerpi3/modules/plugins/
+    Copy the NEXTIONDisplay folder to `/home/pi/craftbeerpi3/modules/plugins/`
 
     or
 
@@ -26,7 +26,7 @@ Now you see the new startscreen.
 
     Key in on the command box of Raspi
 
-    git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
+    `git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
 
 3. Reboot at least CBPi3
 
