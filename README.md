@@ -44,6 +44,8 @@ Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which
 
 ![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/BrewGraph.jpg "Example Waveform")
 
+![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/BrewGraphdark.jpg "Example Waveform")
+
 
 # Introduction to Nextion Displays
 
