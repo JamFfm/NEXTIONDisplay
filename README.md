@@ -108,7 +108,7 @@ NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is 
 
 The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.
 
-In the Brew Graph mode pushing home button and again Brew mode button there is wild data shown. Just go back to home and again to Brew mode. This has to be done several times. Will try to fix in next versions.
+In the Brew Graph mode pushing home button and again Brew mode button there is wild data shown. Just go back to home and again to Brew mode. Sometimes this has to be done several times. Will try to fix in next versions.
 
 
 **Help is welcome**
@@ -119,7 +119,7 @@ In the Brew Graph mode pushing home button and again Brew mode button there is w
 Fixed: Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
 Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.->done
 
-Still struggling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented-> done
+Still struggling with the ASII and UTF8. Therefore kettle and rest- names are not implemented-> done
 
 While pushing clear-button the min and max values are not deleted.-> done
 
