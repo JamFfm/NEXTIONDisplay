@@ -34,7 +34,7 @@ In commandbox type in: python -m pip install pyserial
 
 
 # What for?
-This addin is designed for Craftbeerpi 3.02 and will display mainly temperatures via serial connection to a Color Touch TFT. 
+This addin is designed for Craftbeerpi 3.02 and will display mainly the temperature of only one kettle or fermenter (fermeter not implemented in beta) via serial connection to a Color Touch TFT. 
 
 Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which works via SPI connection in my repository.
 
