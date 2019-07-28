@@ -94,7 +94,7 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 Push the buttons in the startscreen and choose the desired screen.
 1. There is a screen with big digits with current temperature and the target temperature.
 
-2. There is a graph which will show the temperature of the past 35 min and its corresponding target temperature. Attention: If target temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active kettle and the name of the active rest is shown.
+2. There is a graph which will show the temperature of the past 35 min and its corresponding target temperature. Attention: If target temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active kettle and the name of the active rest is shown. At active rest the remaining time of the timer is shown.
 
 # Parameter
 
@@ -102,6 +102,8 @@ Have a look in the parameters section in CraftbeerPi Gui.
 All parameter with the Nextion "flag" will have influence.
 
 NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is number 1.
+NEXTION_Serial_Port: Choose the Serial Port, Windows like COM1, Linux like dev/ttyS0,/dev/ttyAM0, etc. NO! CBPi reboot required
+The code in the Repro uses USB Connection. You can change your connection/port here.
 
 
 # Known problems
