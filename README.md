@@ -4,25 +4,19 @@
 
 Use Nextion Display on a CraftbeerPi3 installation.
 
-This is alpha and not for use in production installations!
+This is beta and not for use in production installations!
 
-Until now code is just in a very first version with known malfunktions! Display design in alpha version!
+Until now code is just in a first version with known malfunktions! Display design in beta version!
 
 
 # Installation
 
-1. Power off the display. Store the .tft file in this repository via a PC/Mac on a SD Card in a fat32 system (usually SD card max 32GB). There must be only 1 file on the card. Push the SD card in the display. Power on the display. Remove SD Card after installation. Again poweroff/poweron. 
+1. Power off the display. Store the .tft file of this repository via a PC/Mac on a SD Card in a fat32 system (usually SD card max 32GB). There must be only 1 file on the card. Push the SD card in the display SD Card reader. Power on the display. Remove SD Card after installation. Again poweroff/poweron. 
 Now you see the new startscreen.
 
 2. Load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
 
-    Workaround1: 
-
-    Copy the NEXTIONDisplay folder to `/home/pi/craftbeerpi3/modules/plugins/`
-
-    or
-
-    Workaround2:
+    Workaround:
 
     Key in on the command box of Raspi
 
@@ -30,8 +24,10 @@ Now you see the new startscreen.
 
 3. Reboot at least CBPi3
 
-
 Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. Go again to the RASPI Settings. Turn on the Serial Port. Turn off the Serial console.
+
+![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/SerialConfig.jpg "Config of Serial Connection")
+
 Maybe pyserial lib has to be installed if there is an error at import serial:
 
 In commandbox type in: python -m pip install pyserial
@@ -110,11 +106,8 @@ NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is 
 
 The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.
 
-While pushing clear-button the min and max values are not deleted.
+In the Brew Graph mode pushing home button and again Brew mode button there is wild data shown. Just go back to home and again to Brew mode. This has to be done several times. Will try to fix in next versions.
 
-Because of a lag of knowledge the rebuild of the graph in a new temperature scale is slow. Will fix it with higher baud rate of serial connection and the NEXTION addt function in the future.
-
-Until now fahrenheit is not supported. But will be in further releases.
 
 **Help is welcome**
 
@@ -122,9 +115,16 @@ Until now fahrenheit is not supported. But will be in further releases.
 # Fixed Problems
 
 Fixed: Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
-Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.
+Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.->done
 
-Still struggling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented.
+Still struggling with the ASII and UTF8. Therefore Kettle and rest- names are not implemented-> done
+
+While pushing clear-button the min and max values are not deleted.-> done
+
+Because of a lag of knowledge the rebuild of the graph in a new temperature scale is slow. Will fix it with higher baud rate of serial connection and the NEXTION addt function in the future.-> done
+
+Until now fahrenheit is not supported. But will be in further releases.-> done
+
 
 # Support
 
