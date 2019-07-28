@@ -102,6 +102,7 @@ Have a look in the parameters section in CraftbeerPi Gui.
 All parameter with the Nextion "flag" will have influence.
 
 NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is number 1.
+
 NEXTION_Serial_Port: Choose the Serial Port, Windows like COM1, Linux like dev/ttyS0,/dev/ttyAM0, etc. NO! CBPi reboot required
 The code in the Repro uses USB Connection. You can change your connection/port here.
 
