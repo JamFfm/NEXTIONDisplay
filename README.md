@@ -57,7 +57,7 @@ But powerful! From the Raspi side it is possible to place data to a special comp
 You just have to use the serial connection. To place a text in a text labels it is like t0.txt="your Text".
 To close sending you have to terminate like three times x0ff.
 
-There is the possibility to place some logic into the display. For example place a button on a page and program page 2 at release event. The page 2 will be displayed without the help of the Raspi.
+There is the possibility to place some logic into the display. For example place a button on a page and write `page 2` at release event. The page 2 will be displayed without the help of the Raspi.
 
 The way to work with Nextion Displays is:
 
@@ -70,7 +70,7 @@ The way to work with Nextion Displays is:
 4. On Raspi side use the Serial Connection at your code to poste instructions to the display, and receive data from the display.
     It is touchscreen therefor it is quite helpful to use the inputs of the display in your code.
 
-5. Be aware that all pictures and fonds have to be imported in the Editor and these have to be stored in the DISPLAY! like described in 3. You can not use pictures dynamically!! But you can change the pictures stored in the display.
+5. Be aware that all pictures and fonds have to be imported in the Editor and these have to be stored in the DISPLAY! like described in 3. You can not use pictures dynamically!! But you can change the visibility of pictures stored in the display.
 
 
 You can download the Nextion Editor here:
