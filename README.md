@@ -38,7 +38,7 @@ This addin is designed for Craftbeerpi 3.02 and will display mainly temperatures
 
 Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which works via SPI connection in my repository.
 
-![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/Startscreen1.jpg "Example Startscreen")
+![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/HomeScreen.jpg "Example Startscreen")
 
 ![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/digitmode.jpg "Example Digitscreen")
 
