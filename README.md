@@ -41,13 +41,13 @@ Does the same as the TFTDisplay and LCD addin together. Have a look at the TFTDi
 
 # Advantages
 
-## Needs only 4 Wires
-## can also be connected via USB
-## Dark Mode
-## no loss of graphdata when changing views
-## graph, stepname, kettelname, remaining time of rest, current temp, target temp in one screen
-## easy change of gui via Nextion Editor
-## bright display
+- Needs only 4 Wires
+- can also be connected via USB
+- Dark Mode
+- no loss of graphdata when changing views
+- graph, stepname, kettelname, remaining time of rest, current temp, target temp in one screen
+- easy change of gui via Nextion Editor
+- bright display
 
 Have a look:
 
