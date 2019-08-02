@@ -34,9 +34,22 @@ In commandbox type in: python -m pip install pyserial
 
 
 # What for?
+
 This addin is designed for Craftbeerpi 3.02 and will display mainly the temperature of only one kettle or fermenter (fermeter not implemented in beta) via serial connection to a Color Touch TFT. 
 
-Does the same as the TFTDisplay addin. Have a look at the TFTDisplay addon which works via SPI connection in my repository.
+Does the same as the TFTDisplay and LCD addin together. Have a look at the TFTDisplay which works via SPI connection and and LCD (I2C) addon in my repository.
+
+# Advantages
+
+## Needs only 4 Wires
+## can also be connected via USB
+## Dark Mode
+## no loss of graphdata when changing views
+## graph, stepname, kettelname, remaining time of rest, current temp, target temp in one screen
+## easy change of gui via Nextion Editor
+## bright display
+
+Have a look:
 
 ![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/HomeScreen.jpg "Example Startscreen")
 
@@ -110,8 +123,7 @@ The code in the Repro uses USB Connection. You can change your connection/port h
 # Known problems
 
 The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.
-
-In the Brew Graph mode pushing home button and again Brew mode button there is wild data shown. Just go back to home and again to Brew mode. Sometimes this has to be done several times. Will try to fix in next versions.
+Due to the fact that wave is only working with integer the wavevalues have to be rounded. So sometimes the graph is not precise. Error should be around 0.1°C/F.
 
 
 **Help is welcome**
@@ -120,7 +132,7 @@ In the Brew Graph mode pushing home button and again Brew mode button there is w
 # Fixed Problems
 
 Fixed: Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
-Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.->done
+Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.-> done
 
 Still struggling with the ASII and UTF8. Therefore kettle and rest- names are not implemented-> done
 
@@ -129,6 +141,8 @@ While pushing clear-button the min and max values are not deleted.-> done
 Because of a lag of knowledge the rebuild of the graph in a new temperature scale is slow. Will fix it with higher baud rate of serial connection and the NEXTION addt function in the future.-> done
 
 Until now fahrenheit is not supported. But will be in further releases.-> done
+
+In the Brew Graph mode pushing home button and again Brew mode button there is wild data shown. Just go back to home and again to Brew mode. Sometimes this has to be done several times. Will try to fix in next versions.-> done
 
 
 # Support
