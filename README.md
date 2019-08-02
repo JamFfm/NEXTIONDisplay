@@ -6,7 +6,7 @@ Use Nextion Display on a CraftbeerPi3 installation.
 
 This is beta and not for use in production installations!
 
-Until now code is just in a first version with known malfunktions! Display design in beta version!
+Until now code is just in a first version with known malfunctions! Display design in beta version!
 
 
 # Installation
@@ -64,7 +64,7 @@ Have a look:
 
 The Nextion displays are HMI displays which is not equal to HDMI!!
 There is a Nextion editor which helps to design the Display. It is possible to build several display pages.
-The amout of pages is only limited to the amount of memory.
+The amount of pages is only limited to the amount of memory.
 In the Editor you can place pictures, fonts , buttons, text labels like in Visual Studio. Just way more simple. 
 But powerful! From the Raspi side it is possible to place data to a special component placed on the page by the editor.
 You just have to use the serial connection. To place a text in a text labels it is like t0.txt="your Text".
@@ -80,7 +80,7 @@ The way to work with Nextion Displays is:
 
 3. Put the SD Card in the Display, power on, the project will be loaded.
 
-4. On Raspi side use the Serial Connection at your code to poste instructions to the display, and receive data from the display.
+4. On Raspi side use the Serial Connection at your code to post instructions to the display, and receive data from the display.
     It is touchscreen therefor it is quite helpful to use the inputs of the display in your code.
 
 5. Be aware that all pictures and fonds have to be imported in the Editor and these have to be stored in the DISPLAY! like described in 3. You can not use pictures dynamically!! But you can change the visibility of pictures stored in the display.
@@ -134,7 +134,7 @@ Due to the fact that wave is only working with integer the wavevalues have to be
 Fixed: Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
 Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.-> done
 
-Still struggling with the ASII and UTF8. Therefore kettle and rest- names are not implemented-> done
+Still struggling with the ASCII and UTF8. Therefore kettle and rest- names are not implemented-> done
 
 While pushing clear-button the min and max values are not deleted.-> done
 
