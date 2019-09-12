@@ -86,7 +86,7 @@ def NextionwriteString(ser, TextLableName, string):
     :param ser: name of the serial connection
     :param TextLableName: name of the "textlable" on the Nextion
     :param string: the "string" to write in this lable
-    use like NextionwriteString("TextLableName", "string")
+    use like NextionwriteString(ser, "TextLabelName", "string")
     """
     command = ('%s.txt="%s"' % (TextLableName, string))
     # cbpi.app.logger.info('NextionDisplay  - command Txt:%s' % command)
@@ -117,11 +117,11 @@ def NextionwriteClear(ser, WaveID, channel):
 
 def Nextion_ref_wave(ser, stop_start):
     """
-    :param ser:ser
+    :param ser:name of the serial connection
     :param stop_start: ether "ref_stop" or "ref_star"
-    use as: ref_wave("ref_stop") or ref_wave("ref_star")
+    use as: ref_wave(ser, "ref_stop") or ref_wave(ser, "ref_star")
     this is like a substitude of addt Nextion function
-    stopps and starts refresh of wave graph
+    stops and starts refresh of wave graph
     """
     if stop_start == "ref_stop" or stop_start == "ref_star":
         command = stop_start
@@ -298,7 +298,7 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False):
     NextionwriteString(ser, "tfermavarage", "%s%s" % (round(((fmax_value+fmin_value)/2), 1), (chr(176)+str(unit))))
     # get the scaling-factor
     offset = (fmax_value - fmin_value)
-    xpixel = 202  # the height of the wave object on Nextion if you change the wave hight this has to be adjusted
+    xpixel = 202  # the height of the wave object on Nextion if you change the wave height this has to be adjusted
     ffactor = (xpixel / offset)
     global fmin_value_old
     global fmax_value_old
@@ -327,7 +327,7 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False):
         Nextion_ref_wave(ser, "ref_star")
     else:
         digit = (round(float((cfermtemp - fmin_value) * ffactor), 2))
-        # TODO hier abfangen dasdigit nicht gleich null wird
+        # TODO hier abfangen das digit nicht gleich null wird
         string = (str(round(float(digit)))[:-2])
         NextionwriteWave(ser, 5, 0, string)
         cbpi.app.logger.info('NextionDisplay  - currentfermtemp, digit, string: %s, %s, %s' % (cfermtemp, digit, string))
@@ -526,7 +526,7 @@ def get_version_fo(path):
 
 def interval(seconds):
     """
-    gives back intervall as tuppel
+    gives back interval as tuple
     @return: (weeks, days, hours, minutes, seconds)
     formats string for fermtime_remaining
     returns the formatted string for text-field
@@ -642,7 +642,7 @@ def initNextion(app):
     cbpi.app.logger.info("NEXTIONDisplay  - init passed")
     # end of init
 
-    @cbpi.backgroundtask(key="Nextionjob", interval=4)
+    @cbpi.backgroundtask(key="Nextionjob", interval=6)  # 4 = 27 min, 5 = 33.8 min, 6 = 40.6 min
     def Nextionjob(api):
         # This is the main job
 
