@@ -134,7 +134,7 @@ The code in the Repro uses USB Connection. You can change your connection/port h
 
 # Known problems
 
-The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.
+
 Due to the fact that wave is only working with integer the wavevalues have to be rounded. So sometimes the graph is not precise. Error should be around 0.1°C/F.
 
 With Raspi 3b I got some Problems to connect to a serial port. Raspi could only read the Nextion but not write to it. 
@@ -158,6 +158,8 @@ Because of a lag of knowledge the rebuild of the graph in a new temperature scal
 Until now fahrenheit is not supported. But will be in further releases.-> done
 
 In the Brew Graph mode pushing home button and again Brew mode button there is wild data shown. Just go back to home and again to Brew mode. Sometimes this has to be done several times. Will try to fix in next versions.-> done
+
+The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.-> done
 
 
 # Support
