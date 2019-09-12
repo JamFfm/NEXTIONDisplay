@@ -1,12 +1,8 @@
 # NEXTIONDisplay
 
-![](https://img.shields.io/badge/CBPi%20addin-under%20development_for_V3-yellow.svg)  ![](https://img.shields.io/github/license/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/last-commit/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/NEXTIONDisplay.svg?style=flat)
+![](https://img.shields.io/badge/CBPi%20addin-close%20to%20production_for_V3-yellow.svg)  ![](https://img.shields.io/github/license/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/last-commit/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/NEXTIONDisplay.svg?style=flat)
 
 Use Nextion Display on a CraftbeerPi3 installation.
-
-This is beta and not for use in production installations!
-
-Until now code is just in a first version with known malfunctions! Display design in beta version!
 
 
 # Installation
@@ -18,7 +14,7 @@ Now you see the new startscreen.
 
     Workaround:
 
-    Key in on the command box of Raspi
+    Key in in the command box of Raspi
 
     `git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
 
@@ -35,9 +31,9 @@ In commandbox type in: python -m pip install pyserial
 
 # What for?
 
-This addin is designed for Craftbeerpi 3.02 and will display mainly the temperature of only one kettle or fermenter (fermeter not implemented in beta) via serial connection to a Color Touch TFT. 
+This addin is designed for Craftbeerpi 3 and will display mainly the temperature of only one kettle or fermenter via serial connection to a color touch TFT display. 
 
-Does the same as the TFTDisplay and LCD addin together. Have a look at the TFTDisplay which works via SPI connection and and LCD (I2C) addon in my repository.
+Does the same as the TFTDisplay-addin and LCD-addin together. Have a look at the TFTDisplay which works via SPI connection and and LCD (I2C) addon in my repository.
 
 # Advantages
 
@@ -101,29 +97,47 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 
 ![Wireing](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/MMDVM-Nextion-wiring-for-programming.jpg "BrewNextionDisplay 3.5 Zoll")
 
+For USB connection please use a USB to Serial converter like this one. 
+https://de.aliexpress.com/item/32470262188.html?spm=a2g0s.9042311.0.0.51364c4dlbTYMx
+
+TX->RX| 
+RX->TX| 
+GND->GND| 
+VCC->VCC use 5v (jumper)|
+
+
 
 # Usage
 
 Push the buttons in the startscreen and choose the desired screen.
 1. There is a screen with big digits with current temperature and the target temperature.
 
-2. There is a graph which will show the temperature of the past 35 min and its corresponding target temperature. Attention: If target temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active kettle and the name of the active rest is shown. At active rest the remaining time of the timer is shown.
+2. There is a graph which will show the mash temperature of the past 40 min and its corresponding target temperature. Attention: If target temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active kettle and the name of the active rest is shown. At active rest the remaining time of the timer is shown.
+
+3. There is a graph which will show the fermenter temperature of the past 40 min and its corresponding target temperature. Attention: If target fermenter temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active fermenter+beername and the name of the active fermstep is shown. please use a short fermenter name. At active rest the remaining time of the fermenter-timer is shown.
+
+4. There is a dark mode of the brew-screen and the ferm-screen. In the home-screen you con change the mod by touch the "darkmode xx" text. The digit -screne has got only one mode. 
 
 # Parameter
 
-Have a look in the parameters section in CraftbeerPi Gui.
+Have a look in the parameters section in CraftbeerPi3 Gui.
 All parameter with the Nextion "flag" will have influence.
 
 NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is number 1.
 
+NEXTION_Fermenter_ID: Choose fermenter (Number), NO! CBPi reboot required, default is number 1.
+
 NEXTION_Serial_Port: Choose the Serial Port, Windows like COM1, Linux like dev/ttyS0,/dev/ttyAM0, etc. NO! CBPi reboot required
-The code in the Repro uses USB Connection. You can change your connection/port here.
+The code in the Repro uses USB Connection. You can change your connection/port here. Default is usb: /dev/ttyUSB0
 
 
 # Known problems
 
 The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.
 Due to the fact that wave is only working with integer the wavevalues have to be rounded. So sometimes the graph is not precise. Error should be around 0.1°C/F.
+
+With Raspi 3b I got some Problems to connect to a serial port. Raspi could only read the Nextion but not write to it. 
+I assume the serial of bluetooth needs to be captured. I did not want to kill bluetooth though I do not use it in my installation.
 
 
 **Help is welcome**
