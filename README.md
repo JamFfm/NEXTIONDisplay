@@ -98,14 +98,15 @@ Features include: a 3.5" TFT 480x320 resistive touch screen display, 16M Flash, 
 ![Wireing](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/MMDVM-Nextion-wiring-for-programming.jpg "BrewNextionDisplay 3.5 Zoll")
 
 For USB connection please use a USB to Serial converter like this one. 
+
 https://de.aliexpress.com/item/32470262188.html?spm=a2g0s.9042311.0.0.51364c4dlbTYMx
 
-TX->RX| 
-RX->TX| 
-GND->GND| 
-VCC->VCC use 5v (jumper)|
-
-
+Nextion | USB Serial Converter| Raspi
+------- | --------------------| -----
+TX      | RX                  |  U
+RX      | TX                  |  S
+GND     | GND                 |  B
+VCC     | use 5v (jumper)     |  x
 
 # Usage
 
