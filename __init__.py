@@ -18,10 +18,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# NextionDisplay Version 0.9.1.00
+# NextionDisplay Version 0.0.9.30
 # Assembled by JamFfm
 #
-# sudo pip install pyserial         # install serial unlikely you have to
+# sudo pip install pyserial         # install serial, unlikely you have to
 #                                   # install it because usually it is already installed
 # python -m serial.tools.list_ports # List all ports in command-box
 # dmesg | grep tty                  # List serial Connections
@@ -30,13 +30,14 @@
 from modules import cbpi, fermenter, app
 import time
 import serial
-import socket  # ip adr
-import fcntl   # ip adr
-import struct  # ip adr
-from time import strftime  # Time display
+import socket                   # ip adr
+import fcntl                    # ip adr
+import struct                   # ip adr
+from time import strftime       # Time display
 from time import sleep
 import threading
 
+DEBUG = False                   # toggle writing of debug information in the app.log
 TERMINATOR = bytearray([0xFF, 0xFF, 0xFF])
 liste = []
 listetarget = []
@@ -56,7 +57,7 @@ def nx_setsys(ser, sysvar, value):  # Set system variables. sysvar as text. exam
     # Possible commands: 'bkcmd', 'dp', 'dim', 'dims', 'baud', 'bauds', 'ussp', 'thsp', 'thup', 'delay', 'sleep'
     # see instruction set of NEXTION device to see possible values for each system variable
     setdisplay = ('%s=%s' % (sysvar, str(value)))
-    # cbpi.app.logger.info('NextionDisplay  - nx_setsys:%s' % setdisplay)
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - nx_setsys:%s' % setdisplay)
     ser.write(setdisplay)
     ser.write(TERMINATOR)
 
@@ -66,13 +67,13 @@ def writingDigittoNextion(ser, kettleID):
     #   Current Temperature in text field
     TextDigitTxt2 = ("%6.2f%s" % (ctemp, (chr(176)+"C")))
     textCurrTemp2 = str(TextDigitTxt2)
-    # cbpi.app.logger.info('NextionDisplay  - digit CurrTempTxt.txt:%s' % (textCurrTemp2))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - digit CurrTempTxt.txt:%s' % (textCurrTemp2))
     NextionwriteString(ser, "CurrTempTxt", textCurrTemp2)
 
     #   Target Temp in Text Field    
     TextDigitTxt3 = ("%6.2f%s" % (float(TempTargTemp(kettleID)), (chr(176)+"C")))
     textCurrTemp3 = str(TextDigitTxt3)
-    # cbpi.app.logger.info('NextionDisplay  - TargTempTxt.txt:%s' % (textCurrTemp3))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - TargTempTxt.txt:%s' % (textCurrTemp3))
     NextionwriteString(ser, "TargetTempTxt", textCurrTemp3)
 
     #   Current Kettlename in text field
@@ -89,28 +90,28 @@ def NextionwriteString(ser, TextLableName, string):
     use like NextionwriteString(ser, "TextLabelName", "string")
     """
     command = ('%s.txt="%s"' % (TextLableName, string))
-    # cbpi.app.logger.info('NextionDisplay  - command Txt:%s' % command)
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - command Txt:%s' % command)
     ser.write(command)
     ser.write(TERMINATOR)
 
 
 def NextionwriteWave(ser, WaveID, Channnel, intValue):
     command = ('add %s,%s,%s' % (WaveID, Channnel, intValue))
-    # cbpi.app.logger.info('NextionDisplay  - command Wave:%s' % command)
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - command Wave:%s' % command)
     ser.write(command)
     ser.write(TERMINATOR)
 
 
 def NextionwriteNumber(ser, NumberLableName, integer):
     command = ('%s.val=%s' % (NumberLableName, integer))
-    # cbpi.app.logger.info('NextionDisplay  - command Number:%s' % command)
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - command Number:%s' % command)
     ser.write(command)
     ser.write(TERMINATOR)
 
 
 def NextionwriteClear(ser, WaveID, channel):
     command = ('cle %s,%s' % (WaveID, channel))
-    # cbpi.app.logger.info('NextionDisplay  - command Number:%s' % command)
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - command Number:%s' % command)
     ser.write(command)
     ser.write(TERMINATOR)
 
@@ -134,15 +135,15 @@ def Nextion_ref_wave(ser, stop_start):
 
 def Nextion_refresh_wave(ser, waveid, channnel, amountofbytes, addtliste):
     """
-    not used anymore
+    not used anymore because addt function is not reliable, use ref_stop or ref_star instead
     :param ser: serial object
     :param waveid: id of the wave item on the Nextion as integer
-    :param channnel: channel if wave as integer
+    :param channnel: channel of wave as integer
     :param amountofbytes: amount of byte equal to amount of values to send as integer
     :param addtliste: name of the list if values to send as a list
     """
     command = ('addt %s,%s,%s' % (waveid, channnel, amountofbytes))
-    # cbpi.app.logger.info('NextionDisplay  - command Wave:%s' % command)
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - command Wave:%s' % command)
     ser.write(command)
     ser.write(TERMINATOR)
     sleep(0.6)
@@ -173,23 +174,23 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False):
     #   build liste of current temp values
     if erase is True:
         del liste[:]
-    elif len(liste) < 406:  # the with of the wave object on Nextion if you change the wave with this has to be adjusted
+    elif len(liste) < 406:  # the with of the wave object on Nextion if you change the wave-with this has to be adjusted
         liste.append(currenttemp)
     else:
         del liste[0]
         liste.append(currenttemp)
-        # cbpi.app.logger.info('NextionDisplay  - TempListe bigger 407:%s' % (len(liste)))
-    cbpi.app.logger.info('NextionDisplay  - TempListe len(liste):%s' % (len(liste)))
+        # if DEBUG: cbpi.app.logger.info('NextionDisplay  - TempListe bigger 407:%s' % (len(liste)))
+    if DEBUG: cbpi.app.logger.info('NextionDisplay  - TempListe len(liste):%s' % (len(liste)))
     # build liste of current targettemp values len(listetarget) can be different to len(liste)
     if erase is True:
         del listetarget[:]
     if len(listetarget) < 406:  # the with of the wave object on
-        # Nextion if you change the wave with this has to be adjusted
+        # Nextion if you change the wave-with this has to be adjusted
         listetarget.append(targettemp)
     else:
         del listetarget[0]
         listetarget.append(targettemp)
-    # cbpi.app.logger.info('NextionDisplay  - targetListe len(listetarget):%s' % (len(listetarget)))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - targetListe len(listetarget):%s' % (len(listetarget)))
     # min max labels for scale
     max_value = round((max(liste)+0.1), 1)
     min_value = round((min(liste)-0.1), 1)
@@ -198,49 +199,52 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False):
     NextionwriteString(ser, "tavarage", "%s%s" % (round(((max_value+min_value)/2), 1), (chr(176)+str(unit))))
     # get the scaling-factor
     offset = (max_value - min_value)
-    xpixel = 202  # the height of the wave object on Nextion if you change the wave hight this has to be adjusted
+    xpixel = 202  # the height of the wave object on Nextion if you change the wave-height this has to be adjusted
     factor = (xpixel / offset)
     global min_value_old
     global max_value_old
     if max_value != max_value_old or min_value != min_value_old or rewrite is True:
-        cbpi.app.logger.info('NextionDisplay  - rewrite')
+        if DEBUG: cbpi.app.logger.info('NextionDisplay  - rewrite')
         NextionwriteClear(ser, 1, 0)  # BrewTemp
         NextionwriteClear(ser, 1, 2)  # TargetTemp
         i = 0
         Nextion_ref_wave(ser, "ref_stop")
         while i < len(liste):
-            # cbpi.app.logger.info('NextionDisplay  - liste:%s' % (liste[i]))
+            # if DEBUG: cbpi.app.logger.info('NextionDisplay  - liste:%s' % (liste[i]))
             digit = (round(float((liste[i] - min_value) * factor), 2))
             string = (str(round(float(digit)))[:-2])
             NextionwriteWave(ser, 1, 0, string)
             #  targettemp
-            # cbpi.app.logger.info('NextionDisplay  - listetarget:%s' % (listetarget[i]))
+            # if DEBUG: cbpi.app.logger.info('NextionDisplay  - listetarget:%s' % (listetarget[i]))
             target = (round(float((listetarget[i] - min_value) * factor), 2))
             tstring = (str(round(float(target)))[:-2])
             if 0 < target < xpixel:  # do not write target line if not in temp/screen range
                 NextionwriteWave(ser, 1, 2, tstring)
-                cbpi.app.logger.info(
+                if DEBUG: cbpi.app.logger.info(
                     'NextionDisplay  - listetarget[i], target, tstring: %s, %s, %s' % (listetarget[i], target, tstring))
             pass
-            cbpi.app.logger.info('NextionDisplay  - liste(i), digit, string: %s, %s, %s' % (liste[i], digit, string))
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - liste(i), digit, string: %s, %s, %s' % (liste[i], digit, string))
             i += 1
         Nextion_ref_wave(ser, "ref_star")
     else:
         digit = (round(float((currenttemp - min_value) * factor), 2))
+        # digit2 = digit+2                              # try to adjust thickness of line
         string = (str(round(float(digit)))[:-2])
+        # string2 = (str(round(float(digit2)))[:-2])    # try to adjust thickness of line
         NextionwriteWave(ser, 1, 0, string)
-        cbpi.app.logger.info('NextionDisplay  - currenttemp, digit, string: %s, %s, %s' % (currenttemp, digit, string))
+        # NextionwriteWave(ser, 1, 1, string2)          # try to adjust thickness of line
+        if DEBUG: cbpi.app.logger.info('NextionDisplay  - currenttemp, digit, string: %s, %s, %s' % (currenttemp, digit, string))
         # target Temp
         target = (round(float((targettemp - min_value) * factor), 2))
         tstring = (str(round(float(target)))[:-2])
         if 0 < target < xpixel:  # do not write target line if not in temp/ screen range
             NextionwriteWave(ser, 1, 2, tstring)
-            cbpi.app.logger.info(
+            if DEBUG: cbpi.app.logger.info(
                 'NextionDisplay  - targettemp, target, tstring: %s, %s, %s' % (targettemp, target, tstring))
         else:
             pass
     pass
-    # cbpi.app.logger.info('NextionDisplay  - max and min value: %s, %s' % (max_value, min_value))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - max and min value: %s, %s' % (max_value, min_value))
 
     global max_value_old
     max_value_old = max_value
@@ -274,12 +278,12 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False):
     #   build liste of current temp values
     if erase is True:
         del FERMLISTE[:]
-    elif len(FERMLISTE) < 406:  # the with of the wave object on Nextion if you change the wave with this has to be adjusted
+    elif len(FERMLISTE) < 406:  # the with of the wave object on Nextion if you change the wave-with this has to be adjusted
         FERMLISTE.append(cfermtemp)
     else:
         del FERMLISTE[0]
         FERMLISTE.append(cfermtemp)
-    cbpi.app.logger.info('NextionDisplay  - fermTempListe len(liste):%s' % (len(FERMLISTE)))
+    if DEBUG: cbpi.app.logger.info('NextionDisplay  - fermTempListe len(liste):%s' % (len(FERMLISTE)))
     # build liste of current targettemp values len(listetarget) can be different to len(liste)
     if erase is True:
         del FERMLISTETARGET[:]
@@ -289,7 +293,7 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False):
     else:
         del FERMLISTETARGET[0]
         FERMLISTETARGET.append(tfermtemp)
-    # cbpi.app.logger.info('NextionDisplay  - targetListe len(FERMLISTETARGET):%s' % (len(FERMLISTETARGET)))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - targetListe len(FERMLISTETARGET):%s' % (len(FERMLISTETARGET)))
     # min max labels for scale
     fmax_value = round((max(FERMLISTE)+0.1), 1)
     fmin_value = round((min(FERMLISTE)-0.1), 1)
@@ -303,26 +307,26 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False):
     global fmin_value_old
     global fmax_value_old
     if fmax_value != fmax_value_old or fmin_value != fmin_value_old or frewrite is True:
-        cbpi.app.logger.info('NextionDisplay  - rewrite')
+        if DEBUG: cbpi.app.logger.info('NextionDisplay  - rewrite')
         NextionwriteClear(ser, 5, 0)  # BrewTemp
         NextionwriteClear(ser, 5, 2)  # TargetTemp
         i = 0
         Nextion_ref_wave(ser, "ref_stop")
         while i < len(FERMLISTE):
-            # cbpi.app.logger.info('NextionDisplay  - FERMLISTE:%s' % (FERMLISTE[i]))
+            # if DEBUG: cbpi.app.logger.info('NextionDisplay  - FERMLISTE:%s' % (FERMLISTE[i]))
             digit = (round(float((FERMLISTE[i] - fmin_value) * ffactor), 2))
             string = (str(round(float(digit)))[:-2])
             NextionwriteWave(ser, 5, 0, string)
             #  targettemp
-            # cbpi.app.logger.info('NextionDisplay  - FERMLISTETARGET:%s' % (FERMLISTETARGET[i]))
+            # if DEBUG: cbpi.app.logger.info('NextionDisplay  - FERMLISTETARGET:%s' % (FERMLISTETARGET[i]))
             target = (round(float((FERMLISTETARGET[i] - fmin_value) * ffactor), 2))
             tstring = (str(round(float(target)))[:-2])
             if 0 < target < xpixel:  # do not write target line if not in temp/screen range
                 NextionwriteWave(ser, 5, 2, tstring)
-                cbpi.app.logger.info(
+                if DEBUG: cbpi.app.logger.info(
                     'NextionDisplay  - fermlistetarget[i], target, tstring: %s, %s, %s' % (FERMLISTETARGET[i], target, tstring))
             pass
-            cbpi.app.logger.info('NextionDisplay  - FERMLISTE(i), digit, string: %s, %s, %s' % (FERMLISTE[i], digit, string))
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - FERMLISTE(i), digit, string: %s, %s, %s' % (FERMLISTE[i], digit, string))
             i += 1
         Nextion_ref_wave(ser, "ref_star")
     else:
@@ -330,18 +334,18 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False):
         # TODO hier abfangen das digit nicht gleich null wird
         string = (str(round(float(digit)))[:-2])
         NextionwriteWave(ser, 5, 0, string)
-        cbpi.app.logger.info('NextionDisplay  - currentfermtemp, digit, string: %s, %s, %s' % (cfermtemp, digit, string))
+        if DEBUG: cbpi.app.logger.info('NextionDisplay  - currentfermtemp, digit, string: %s, %s, %s' % (cfermtemp, digit, string))
         # target Temp
         target = (round(float((tfermtemp - fmin_value) * ffactor), 2))
         tstring = (str(round(float(target)))[:-2])
         if 0 < target < xpixel:  # do not write target line if not in temp/ screen range
             NextionwriteWave(ser, 5, 2, tstring)
-            cbpi.app.logger.info(
+            if DEBUG: cbpi.app.logger.info(
                 'NextionDisplay  - targettemp, target, tstring: %s, %s, %s' % (tfermtemp, target, tstring))
         else:
             pass
     pass
-    # cbpi.app.logger.info('NextionDisplay  - max and min value: %s, %s' % (max_value, min_value))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - max and min value: %s, %s' % (max_value, min_value))
 
     global fmax_value_old
     fmax_value_old = fmax_value
@@ -351,10 +355,10 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False):
 
 
 def cbidecode(string):
-    # cbpi.app.logger.info('NextionDisplay  - string:%s' % string)
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - string:%s' % string)
     udata=string.encode("iso-8859-1")
     asciidata=udata.decode("ascii", "ignore")
-    # cbpi.app.logger.info('NextionDisplay  - encoded_str:%s' % (asciidata))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - encoded_str:%s' % (asciidata))
     return asciidata.encode("iso-8859-1")
 
 
@@ -377,7 +381,7 @@ def fermtime_remaining(ser, fermid):
         if cbpi.cache.get("fermenter_task")[(int(fermid))].timer_start is not None:
             ftimeremain = (cbpi.cache.get("fermenter_task").get(fermid).timer_start - time.time())
             ftimeremain = interval(ftimeremain)
-            # cbpi.app.logger.info('NextionDisplay  - fermstepname:%s' % ftimeremain)
+            # if DEBUG: cbpi.app.logger.info('NextionDisplay  - fermstepname:%s' % ftimeremain)
             NextionwriteString(ser, "remainfer", ftimeremain)
         else:
             NextionwriteString(ser, "remainfer", "")
@@ -400,10 +404,10 @@ def fermstepname(fermid):
         try:
             fstepname = cbpi.cache.get("fermenter_task")[(int(fermid))].name
             fstepname = cbidecode(fstepname)
-            cbpi.app.logger.info('NextionDisplay  - fermstepname:%s' % fstepname)
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - fermstepname:%s' % fstepname)
             return fstepname
         except:
-            cbpi.app.logger.info('NextionDisplay  - fermstepname not runnig?')
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - fermstepname not runnig?')
             return "error"
             pass
     else:
@@ -421,7 +425,7 @@ def is_fermenter_step_running():
 def currentfermtemp(fermid):
     # read the current temperature of fermenter with fermenter ID from parameters
     current_sensor_value_ferm = (cbpi.get_sensor_value(int(cbpi.cache.get("fermenter").get(fermid).sensor)))
-    cbpi.app.logger.info('NextionDisplay  - currentfermtemp.txt:%s' % current_sensor_value_ferm)
+    if DEBUG: cbpi.app.logger.info('NextionDisplay  - currentfermtemp.txt:%s' % current_sensor_value_ferm)
     return current_sensor_value_ferm
 
 
@@ -429,7 +433,7 @@ def targetfermtemp(fermid):
     # cbpi.app.logger.info("NEXTIONDisplay  - Target Temp detect")
     current_sensor_value_temptargid = cbpi.cache.get("fermenter")[(int(fermid))].target_temp
     # targfermTemp = ("%6.2f" % (float(current_sensor_value_temptargid)))
-    cbpi.app.logger.info("NEXTIONDisplay  - TargfermTemp: %s" % current_sensor_value_temptargid)
+    if DEBUG: cbpi.app.logger.info("NEXTIONDisplay  - TargfermTemp: %s" % current_sensor_value_temptargid)
     return current_sensor_value_temptargid
 
 
@@ -447,7 +451,7 @@ def ferm_name(fermid):
     try:
         fname = ('%s' % cbpi.cache.get("fermenter").get(fermid).name)
         fname = cbidecode(fname)
-        # cbpi.app.logger.info('NextionDisplay  - ferm_name:%s' % fname)
+        # if DEBUG: cbpi.app.logger.info('NextionDisplay  - ferm_name:%s' % fname)
         return fname
     except:
         return "not found"
@@ -458,7 +462,7 @@ def ferm_beername(fermid):
     try:
         beername = cbpi.cache.get("fermenter").get(fermid).brewname
         beername = cbidecode(beername)
-        # cbpi.app.logger.info('NextionDisplay  - ferm_beername:%s' % beername)
+        # if DEBUG: cbpi.app.logger.info('NextionDisplay  - ferm_beername:%s' % beername)
         return beername
     except:
         return "not found"
@@ -467,9 +471,9 @@ def ferm_beername(fermid):
 
 def kettlename():
     brewkettlename = ('%s' % (cbpi.cache.get("kettle").get(int(kettleID)).name))
-    # cbpi.app.logger.info('NextionDisplay  - KettleNameTxt.txt:%s' % (brewkettlename))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - KettleNameTxt.txt:%s' % (brewkettlename))
     brewkettlename = cbidecode(brewkettlename)
-    # cbpi.app.logger.info('NextionDisplay  - decodeKettleNameTxt.txt:%s' % (brewkettlename))
+    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - decodeKettleNameTxt.txt:%s' % (brewkettlename))
     return brewkettlename
 
 
@@ -477,7 +481,7 @@ def restname():
     s = cbpi.cache.get("active_step")
     if s is not None:
         brewrestname = s.name
-        # cbpi.app.logger.info('NextionDisplay  - brewrestname:%s' % (brewrestname))
+        # if DEBUG: cbpi.app.logger.info('NextionDisplay  - brewrestname:%s' % (brewrestname))
         brewrestname = cbidecode(brewrestname)
         return brewrestname
     else:
@@ -486,18 +490,18 @@ def restname():
 
 
 def Temp(kkid):
-    # cbpi.app.logger.info("NEXTIONDisplay  - Temp detect")
+    # if DEBUG: cbpi.app.logger.info("NEXTIONDisplay  - Temp detect")
     current_sensor_value_id3 = (cbpi.get_sensor_value(int(cbpi.cache.get("kettle").get(int(kkid)).sensor)))
     curTemp = ("%6.2f" % (float(current_sensor_value_id3)))
-    # cbpi.app.logger.info("NEXTIONDisplay  - Temp: %s" % (curTemp))
+    # if DEBUG: cbpi.app.logger.info("NEXTIONDisplay  - Temp: %s" % (curTemp))
     return curTemp
 
 
 def TempTargTemp(temptargid):
-    # cbpi.app.logger.info("NEXTIONDisplay  - Target Temp detect")
+    # if DEBUG: cbpi.app.logger.info("NEXTIONDisplay  - Target Temp detect")
     current_sensor_value_temptargid = cbpi.cache.get("kettle")[(int(temptargid))].target_temp
     targTemp = ("%6.2f" % (float(current_sensor_value_temptargid)))
-    # cbpi.app.logger.info("NEXTIONDisplay  - TargTemp: %s" % (targTemp))
+    # if DEBUG: cbpi.app.logger.info("NEXTIONDisplay  - TargTemp: %s" % (targTemp))
     return targTemp
 
 
@@ -509,6 +513,19 @@ def get_ip(interface):
     finally:
         pass
     return ip_addr
+
+
+def set_ip():
+    if get_ip('wlan0') != 'Not connected':
+        ip = get_ip('wlan0')
+    elif get_ip('eth0') != 'Not connected':
+        ip = get_ip('eth0')
+    elif get_ip('enxb827eb488a6e') != 'Not connected':
+        ip = get_ip('enxb827eb488a6e')
+    else:
+        ip = 'Not connected'
+    pass
+    return ip
 
 
 def get_version_fo(path):
@@ -564,7 +581,7 @@ def set_parameter_kettleID():
     if kettleid is None:
         kettleid = 1
         cbpi.add_config_parameter ("NEXTION_Kettle_ID", 1, "number", "Choose kettle (Number), NO! CBPi reboot required")
-        cbpi.app.logger.info("NEXTIONDisplay  - KettleID added: %s" % kettleid)
+        cbpi.app.logger.info("NEXTIONDisplay - KettleID added: %s" % kettleid)
     return kettleid
 
 
@@ -573,7 +590,7 @@ def set_parameter_fermID():
     if fermid is None:
         fermid = 1
         cbpi.add_config_parameter("NEXTION_Fermenter_ID", 1, "number", "Choose Fermenter (Number), NO! CBPi reboot required")
-        cbpi.app.logger.info("NEXTIONDisplay  - FermenterID added: %s" % fermid)
+        cbpi.app.logger.info("NEXTIONDisplay - FermenterID added: %s" % fermid)
     return fermid
 
 
@@ -584,7 +601,7 @@ def set_serial_port():
         cbpi.add_config_parameter("NEXTION_Serial_Port", "/dev/ttyUSB0", "string",
                                   "Choose the Serial Port, Windows like COM1, Linux like dev/ttyS0,"
                                   " /dev/ttyAM0, /dev/ttyUSB0, etc.")
-        cbpi.app.logger.info("TFTDisplay  - NEXTION_Serial_Port added: %s" % port)
+        cbpi.app.logger.info("TFTDisplay - NEXTION_Serial_Port added: %s" % port)
     return port
 
 
@@ -624,7 +641,7 @@ def initNextion(app):
     try:
         cbpi.app.logger.info("NEXTIONDisplay - NEXTION_KetteID:         %s" % set_parameter_kettleID())
         cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Serial Port:     %s" % port)
-        cbpi.app.logger.info("NEXTIONDisplay - set_parameter_fermID():  %s" % set_parameter_fermID())
+        cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Fermenter_ID:    %s" % set_parameter_fermID())
     except:
         pass
     time.sleep(3)
@@ -648,17 +665,11 @@ def initNextion(app):
 
         global kettleID
         kettleID = set_parameter_kettleID()
+
         fermid = int(set_parameter_fermID())
 
-        if get_ip('wlan0') != 'Not connected':
-            ip = get_ip('wlan0')
-        elif get_ip('eth0') != 'Not connected':
-            ip = get_ip('eth0')
-        elif get_ip('enxb827eb488a6e') != 'Not connected':
-            ip = get_ip('enxb827eb488a6e')
-        else:
-            ip = 'Not connected'
-        pass
+        ip = set_ip()
+
         cbpi_version = "CBPi %s" % (get_version_fo(""))
         # for any reason the first value will be dropped so this is just fake and does nothing
         NextionwriteString(ser, "t1startfake", cbpi_version)
@@ -672,16 +683,16 @@ def initNextion(app):
 
         writingDigittoNextion(ser, kettleID)
         writewave(ser, kettleID)
-        writefermwave(ser, fermid)  # not ok
+        writefermwave(ser, fermid)
 
         # THREAD - DETECT push buttons
         threadnames = threading.enumerate()
-        # cbpi.app.logger.info("NextionDisplay  - names current thread %s" % threadnames)
+        # if DEBUG: cbpi.app.logger.info("NextionDisplay  - names current thread %s" % threadnames)
         threadnames = str(threadnames)
         if "<Thread(read serial," in threadnames:
-            # cbpi.app.logger.info("NextionDisplay  - thread read serial detected")
+            # if DEBUG: cbpi.app.logger.info("NextionDisplay  - thread read serial detected")
             pass
         else:
             t_serialread = threading.Thread(target=detect_touch, name='read serial', args=(ser,))
             t_serialread.start()
-            cbpi.app.logger.info("NextionDisplay  - threads Thread started")
+            if DEBUG: cbpi.app.logger.info("NextionDisplay  - threads Thread started")
