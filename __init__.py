@@ -206,14 +206,18 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False):
     if max_value != max_value_old or min_value != min_value_old or rewrite is True:
         if DEBUG: cbpi.app.logger.info('NextionDisplay  - rewrite')
         NextionwriteClear(ser, 1, 0)  # BrewTemp
+        NextionwriteClear(ser, 1, 1)  # BrewTemp try to adjust thickness of line
         NextionwriteClear(ser, 1, 2)  # TargetTemp
         i = 0
         Nextion_ref_wave(ser, "ref_stop")
         while i < len(liste):
             # if DEBUG: cbpi.app.logger.info('NextionDisplay  - liste:%s' % (liste[i]))
             digit = (round(float((liste[i] - min_value) * factor), 2))
+            digit2 = digit + 1                          # try to adjust thickness of line
             string = (str(round(float(digit)))[:-2])
+            string2 = (str(round(float(digit2)))[:-2])  # try to adjust thickness of line
             NextionwriteWave(ser, 1, 0, string)
+            NextionwriteWave(ser, 1, 1, string2)        # try to adjust thickness of line
             #  targettemp
             # if DEBUG: cbpi.app.logger.info('NextionDisplay  - listetarget:%s' % (listetarget[i]))
             target = (round(float((listetarget[i] - min_value) * factor), 2))
@@ -228,11 +232,11 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False):
         Nextion_ref_wave(ser, "ref_star")
     else:
         digit = (round(float((currenttemp - min_value) * factor), 2))
-        # digit2 = digit+2                              # try to adjust thickness of line
+        digit2 = digit+1                              # try to adjust thickness of line
         string = (str(round(float(digit)))[:-2])
-        # string2 = (str(round(float(digit2)))[:-2])    # try to adjust thickness of line
+        string2 = (str(round(float(digit2)))[:-2])    # try to adjust thickness of line
         NextionwriteWave(ser, 1, 0, string)
-        # NextionwriteWave(ser, 1, 1, string2)          # try to adjust thickness of line
+        NextionwriteWave(ser, 1, 1, string2)          # try to adjust thickness of line
         if DEBUG: cbpi.app.logger.info('NextionDisplay  - currenttemp, digit, string: %s, %s, %s' % (currenttemp, digit, string))
         # target Temp
         target = (round(float((targettemp - min_value) * factor), 2))
@@ -331,9 +335,11 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False):
         Nextion_ref_wave(ser, "ref_star")
     else:
         digit = (round(float((cfermtemp - fmin_value) * ffactor), 2))
-        # TODO hier abfangen das digit nicht gleich null wird
-        string = (str(round(float(digit)))[:-2])
-        NextionwriteWave(ser, 5, 0, string)
+        if digit != 0:
+            ## TODO hier abfangen das digit nicht gleich null wird
+            string = (str(round(float(digit)))[:-2])
+            NextionwriteWave(ser, 5, 0, string)
+        pass
         if DEBUG: cbpi.app.logger.info('NextionDisplay  - currentfermtemp, digit, string: %s, %s, %s' % (cfermtemp, digit, string))
         # target Temp
         target = (round(float((tfermtemp - fmin_value) * ffactor), 2))
