@@ -10,13 +10,18 @@ Use Nextion Display on a CraftbeerPi3 installation.
 1. Power off the display. Store the .tft file of this repository via a PC/Mac on a SD Card in a fat32 system (usually SD card max 32GB). There must be only 1 file on the card. Push the SD card in the display SD Card reader. Power on the display. Remove SD Card after installation. Again poweroff/poweron. 
 Now you see the new startscreen.
 
-2. Load the NEXTIONDisplay addin in the CraftbeerPi3 addin section (not jet available).
+2. Load the NEXTIONDisplay addin from the CraftbeerPi3 addin section (not jet available).
 
     Workaround:
 
     Key in in the command box of Raspi
 
     `git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
+    
+    A update is done by the following commands in the command box of the Raspi
+    
+    `/home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
+    `git pull`
 
 3. Reboot at least CBPi3
 
