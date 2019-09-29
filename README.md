@@ -23,7 +23,7 @@ Now you see the new startscreen.
     A update is done by the following commands in the command box of the Raspi
     
     ```python
-    cd /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
+    cd /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
     git pull
     ```
 
