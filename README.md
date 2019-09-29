@@ -1,6 +1,6 @@
 # NEXTIONDisplay
 
-![](https://img.shields.io/badge/CBPi%20addin%20for%20V3-yellow.svg)  ![](https://img.shields.io/github/license/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/last-commit/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/NEXTIONDisplay.svg?style=flat)
+![](https://img.shields.io/badge/CBPi%20addin-functionable_for_V3-green.svg)  ![](https://img.shields.io/github/license/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/last-commit/JamFfm/NEXTIONDisplay.svg?style=flat) ![](https://img.shields.io/github/release-pre/JamFfm/NEXTIONDisplay.svg?style=flat)
 
 Use Nextion Display on a CraftbeerPi3 installation.
 
