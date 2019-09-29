@@ -20,7 +20,8 @@ Now you see the new startscreen.
     
     A update is done by the following commands in the command box of the Raspi
     
-    `/home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
+    `cd /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
+    
     `git pull`
 
 3. Reboot at least CBPi3
