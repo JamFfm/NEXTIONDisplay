@@ -616,7 +616,7 @@ def set_time(ser):
     while True:
         timestr = ((strftime("%Y-%m-%d %H:%M:%S", time.localtime())).ljust(20))
         NextionwriteString(ser, "t3start", timestr)
-        cbpi.app.logger.info("NextionDisplay  - thread set_time " + timestr)
+        # if DEBUG: cbpi.app.logger.info("NextionDisplay  - thread set_time " + timestr)
         sleep(look_time)  # showing time only every second <look_time>
         
 
