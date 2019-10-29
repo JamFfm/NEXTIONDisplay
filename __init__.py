@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# NextionDisplay Version 0.0.9.30
+# NextionDisplay Version 0.0.9.31
 # Assembled by JamFfm
 #
 # sudo pip install pyserial         # install serial, unlikely you have to
@@ -611,6 +611,15 @@ def set_serial_port():
     return port
 
 
+def set_time(ser):
+    look_time = 1  # in seconds
+    while True:
+        timestr = ((strftime("%Y-%m-%d %H:%M:%S", time.localtime())).ljust(20))
+        NextionwriteString(ser, "t3start", timestr)
+        cbpi.app.logger.info("NextionDisplay  - thread set_time " + timestr)
+        sleep(look_time)  # showing time only every second <look_time>
+        
+
 def detect_touch(ser):
     look_touch = 1  # in seconds
     while True:
@@ -662,6 +671,11 @@ def initNextion(app):
     # nx_setsys(ser, 'bauds', 38400) # already set in display
     # nx_setsys(ser, 'bkcmd', 0)     # already set in display
     ser.reset_output_buffer()
+
+    # Time as thread
+    t_timethread = threading.Thread(target=set_time, name='Time Display', args=(ser,))
+    t_timethread.start()
+
     cbpi.app.logger.info("NEXTIONDisplay  - init passed")
     # end of init
 
@@ -680,9 +694,6 @@ def initNextion(app):
         # for any reason the first value will be dropped so this is just fake and does nothing
         NextionwriteString(ser, "t1startfake", cbpi_version)
         NextionwriteString(ser, "t1start", cbpi_version)
-
-        timestr = ((strftime("%Y-%m-%d %H:%M:%S", time.localtime())).ljust(20))
-        NextionwriteString(ser, "t3start", timestr)
 
         iptext = "IP: %s" % ip
         NextionwriteString(ser, "t2start", iptext)
