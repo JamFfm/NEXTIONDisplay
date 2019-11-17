@@ -37,7 +37,7 @@ from time import strftime       # Time display
 from time import sleep
 import threading
 
-DEBUG = False                   # toggle writing of debug information in the app.log
+DEBUG = True                   # toggle writing of debug information in the app.log
 TERMINATOR = bytearray([0xFF, 0xFF, 0xFF])
 liste = []
 listetarget = []
@@ -57,12 +57,12 @@ def nx_setsys(ser, sysvar, value):  # Set system variables. sysvar as text. exam
     # Possible commands: 'bkcmd', 'dp', 'dim', 'dims', 'baud', 'bauds', 'ussp', 'thsp', 'thup', 'delay', 'sleep'
     # see instruction set of NEXTION device to see possible values for each system variable
     setdisplay = ('%s=%s' % (sysvar, str(value)))
-    # if DEBUG: cbpi.app.logger.info('NextionDisplay  - nx_setsys:%s' % setdisplay)
+    if DEBUG: cbpi.app.logger.info('NextionDisplay  - nx_setsys:%s' % setdisplay)
     ser.write(setdisplay)
     ser.write(TERMINATOR)
 
 
-def writingDigittoNextion(ser, kettleID):
+def writingDigittoNextion(ser, kettleID=1):
     ctemp = currenttemp_float(kettleID)
     #   Current Temperature in text field
     TextDigitTxt2 = ("%6.2f%s" % (ctemp, (chr(176)+"C")))
@@ -77,7 +77,7 @@ def writingDigittoNextion(ser, kettleID):
     NextionwriteString(ser, "TargetTempTxt", textCurrTemp3)
 
     #   Current Kettlename in text field
-    kname = kettlename()
+    kname = kettlename(kettleID)
     textname = "Temperature of %s" % kname
     NextionwriteString(ser, "t3", textname)
 
@@ -151,7 +151,7 @@ def Nextion_refresh_wave(ser, waveid, channnel, amountofbytes, addtliste):
     ser.write(TERMINATOR)
 
 
-def writewave(ser, kettleID=1, erase=False, rewrite=False):
+def writewave(ser, kettleID=1, erase=False, rewrite=False, dubbleline=True):
     currenttemp = currenttemp_float(kettleID)
     targettemp = targettemp_float(kettleID)
     unit = set_nextion_unit()
@@ -164,7 +164,7 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False):
     textCurrTemp1 = str(TextDigitTxt1)
     NextionwriteString(ser, "TargTempBrwTxt", textCurrTemp1)
     #   Current Kettlename in text field    
-    kettlen = kettlename()
+    kettlen = kettlename(kettleID)
     NextionwriteString(ser, "KettleNameTxt", kettlen)
     #   rest name
     restn = restname()
@@ -208,22 +208,27 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False):
         NextionwriteClear(ser, 1, 0)  # BrewTemp
         NextionwriteClear(ser, 1, 1)  # BrewTemp try to adjust thickness of line
         NextionwriteClear(ser, 1, 2)  # TargetTemp
+        NextionwriteClear(ser, 1, 3)  # TargetTemp try to adjust thickness of line
         i = 0
         Nextion_ref_wave(ser, "ref_stop")
         while i < len(liste):
-            # if DEBUG: cbpi.app.logger.info('NextionDisplay  - liste:%s' % (liste[i]))
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - liste:%s' % (liste[i]))
             digit = (round(float((liste[i] - min_value) * factor), 2))
             digit2 = digit + 1                          # try to adjust thickness of line
             string = (str(round(float(digit)))[:-2])
             string2 = (str(round(float(digit2)))[:-2])  # try to adjust thickness of line
             NextionwriteWave(ser, 1, 0, string)
-            NextionwriteWave(ser, 1, 1, string2)        # try to adjust thickness of line
+            if dubbleline: NextionwriteWave(ser, 1, 1, string2)        # try to adjust thickness of line
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - dubbleline rewrite: %s' % dubbleline)
             #  targettemp
             # if DEBUG: cbpi.app.logger.info('NextionDisplay  - listetarget:%s' % (listetarget[i]))
             target = (round(float((listetarget[i] - min_value) * factor), 2))
+            target2 = target + 1
             tstring = (str(round(float(target)))[:-2])
+            tstring2 = (str(round(float(target2)))[:-2])
             if 0 < target < xpixel:  # do not write target line if not in temp/screen range
                 NextionwriteWave(ser, 1, 2, tstring)
+                if dubbleline: NextionwriteWave(ser, 1, 3, tstring2)
                 if DEBUG: cbpi.app.logger.info(
                     'NextionDisplay  - listetarget[i], target, tstring: %s, %s, %s' % (listetarget[i], target, tstring))
             pass
@@ -236,13 +241,16 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False):
         string = (str(round(float(digit)))[:-2])
         string2 = (str(round(float(digit2)))[:-2])    # try to adjust thickness of line
         NextionwriteWave(ser, 1, 0, string)
-        NextionwriteWave(ser, 1, 1, string2)          # try to adjust thickness of line
+        if dubbleline: NextionwriteWave(ser, 1, 1, string2)          # try to adjust thickness of line
         if DEBUG: cbpi.app.logger.info('NextionDisplay  - currenttemp, digit, string: %s, %s, %s' % (currenttemp, digit, string))
         # target Temp
         target = (round(float((targettemp - min_value) * factor), 2))
+        target2 = target + 1
         tstring = (str(round(float(target)))[:-2])
+        tstring2 = (str(round(float(target2)))[:-2])  # try to adjust thickness of line
         if 0 < target < xpixel:  # do not write target line if not in temp/ screen range
             NextionwriteWave(ser, 1, 2, tstring)
+            if dubbleline: NextionwriteWave(ser, 1, 3, tstring2)     # try to adjust thickness of line
             if DEBUG: cbpi.app.logger.info(
                 'NextionDisplay  - targettemp, target, tstring: %s, %s, %s' % (targettemp, target, tstring))
         else:
@@ -475,8 +483,8 @@ def ferm_beername(fermid):
     pass
 
 
-def kettlename():
-    brewkettlename = ('%s' % (cbpi.cache.get("kettle").get(int(kettleID)).name))
+def kettlename(kettleID):
+    brewkettlename = ('%s' % cbpi.cache.get("kettle").get(int(kettleID)).name)
     # if DEBUG: cbpi.app.logger.info('NextionDisplay  - KettleNameTxt.txt:%s' % (brewkettlename))
     brewkettlename = cbidecode(brewkettlename)
     # if DEBUG: cbpi.app.logger.info('NextionDisplay  - decodeKettleNameTxt.txt:%s' % (brewkettlename))
@@ -586,10 +594,47 @@ def set_parameter_kettleID():
     kettleid = cbpi.get_config_parameter("NEXTION_Kettle_ID", None)
     if kettleid is None:
         kettleid = 1
-        cbpi.add_config_parameter ("NEXTION_Kettle_ID", 1, "number", "Choose kettle (Number), NO! CBPi reboot required")
+        cbpi.add_config_parameter("NEXTION_Kettle_ID", 1, "kettle", "Choose kettle (Number), NO! CBPi reboot required")
         cbpi.app.logger.info("NEXTIONDisplay - KettleID added: %s" % kettleid)
     return kettleid
 
+
+def set_parameter_kettleName():
+    # not used not functional
+    kettlename = cbpi.get_config_parameter("NEXTION_Kettle_Name", None)
+    if kettlename is None:
+        kettlename = cbpi.cache.get("kettle").get(1).name
+        try:
+            cbpi.add_config_parameter("NEXTION_Kettle_Name", kettlename, "kettle", "Choose kettle Name, NO! CBPi "
+                                                                                   "reboot required")
+            cbpi.app.logger.info("NEXTIONDisplay - KettleName added: %s" % kettlename)
+        except:
+            pass
+    for idx, value in cbpi.cache["kettle"].items():
+        name = cbpi.cache.get("kettle").get(value.id).name
+        if DEBUG: cbpi.app.logger.info("NEXTIONDisplay - KettleName items Name: %s" % name)
+        if DEBUG: cbpi.app.logger.info("NEXTIONDisplay - KettleName items ID: %s" % value.ID)
+        if name == kettlename:
+            if DEBUG: cbpi.app.logger.info("NEXTIONDisplay - KettleName selected items ID: %s" % value.ID)
+            return value.ID
+
+
+
+    # todo
+
+    # read kettlename from choose
+    # loop through all kettles and compare kettlename with kettlename from select
+    # if kettlename_from_choose == cbpi.cache.get("kettle").get(kettleID)).name):
+    #   return kettleID
+    # for idx, value in cbpi.cache["fermenter"].items():
+    #     current_sensor_value = (cbpi.get_sensor_value(value.sensor))
+    #     # INFO value = modules.fermenter.Fermenter
+    #     # INFO FermenterId = modules.fermenter.Fermenter.id
+
+    #     # get the state of the heater of the current fermenter, if there is none, except takes place
+    #     try:
+    #         heater_of_fermenter = int(cbpi.cache.get("fermenter").get(value.id).heater)
+    #         # cbpi.app.logger.info("LCDDisplay  - fheater id %s" % (heater_of_fermenter))
 
 def set_parameter_fermID():
     fermid = cbpi.get_config_parameter("NEXTION_Fermenter_ID", None)
@@ -611,6 +656,23 @@ def set_serial_port():
     return port
 
 
+def set_parameter_dubbleline(ser):
+    dubbleline = cbpi.get_config_parameter("NEXTION_bold_line", None)
+    if dubbleline is None:
+        dubbleline = "on"
+        cbpi.add_config_parameter("NEXTION_bold_line", "on", "select", "Choose if chart is drawn in bold line or not, "
+                                                                       "CBPi reboot recommended", ["on", "off"])
+        cbpi.app.logger.info("TFTDisplay - NEXTION_bold_line added: %s" % dubbleline)
+
+    if dubbleline == "on":
+        return True
+    else:
+        NextionwriteClear(ser, 1, 1)  # BrewTemp try to adjust thickness of line
+        NextionwriteClear(ser, 1, 3)  # BrewTemp try to adjust thickness of line
+        return False
+    pass
+
+
 def set_time(ser):
     look_time = 1  # in seconds
     while True:
@@ -618,9 +680,9 @@ def set_time(ser):
         NextionwriteString(ser, "t3start", timestr)
         # if DEBUG: cbpi.app.logger.info("NextionDisplay  - thread set_time " + timestr)
         sleep(look_time)  # showing time only every second <look_time>
-        
 
-def detect_touch(ser):
+
+def detect_touch(ser, kettleID, dubbleline):
     look_touch = 1  # in seconds
     while True:
         touch = ser.read_until(TERMINATOR)
@@ -635,10 +697,11 @@ def detect_touch(ser):
                 # if pageID_touch == "0x1" and compID_touch == "0x10":
                 if (pageID_touch == "0x1" or pageID_touch == "0x5") and compID_touch == "0x5":
                     cbpi.app.logger.info("NextionDisplay  - touch: Clearbutton of Brewpage pushed")
-                    writewave(ser, kettleID, erase=True)
+                    writewave(ser, kettleID, erase=True, dubbleline=dubbleline)
                 elif pageID_touch == "0x0" and compID_touch == "0x3":
                     cbpi.app.logger.info("NextionDisplay  - touch: Brewpage button pushed")
-                    writewave(ser, kettleID, erase=False, rewrite=True)
+                    if DEBUG: cbpi.app.logger.info("NextionDisplay  - touch: dubbleline = %s" % dubbleline)
+                    writewave(ser, kettleID, erase=False, rewrite=True, dubbleline=dubbleline)
                 elif (pageID_touch == "0x3" and compID_touch == "0x3") or (pageID_touch == "0x6" and compID_touch == "0x4"):
                     cbpi.app.logger.info("NextionDisplay  - touch: Clearbutton of Fermpage pushed")
                     writefermwave(ser, erase=True)
@@ -653,12 +716,6 @@ def detect_touch(ser):
 @cbpi.initalizer(order=3150)
 def initNextion(app):
     port = set_serial_port()
-    try:
-        cbpi.app.logger.info("NEXTIONDisplay - NEXTION_KetteID:         %s" % set_parameter_kettleID())
-        cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Serial Port:     %s" % port)
-        cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Fermenter_ID:    %s" % set_parameter_fermID())
-    except:
-        pass
     time.sleep(3)
     ser = serial.Serial(
         port=port,
@@ -668,25 +725,37 @@ def initNextion(app):
         bytesize=serial.EIGHTBITS,
         timeout=0.1
     )
+    ser.reset_output_buffer()
+
+    try:
+        cbpi.app.logger.info("NEXTIONDisplay - NEXTION_KetteID:         %s" % set_parameter_kettleID())
+        cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Serial Port:     %s" % port)
+        cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Fermenter_ID:    %s" % set_parameter_fermID())
+        cbpi.app.logger.info("NEXTIONDisplay - NEXTION_bold_line:       %s" % set_parameter_dubbleline(ser))
+        # cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Kettle_Name:     %s" % set_parameter_kettleName)
+    except:
+        pass
+
     # nx_setsys(ser, 'bauds', 38400) # already set in display
     # nx_setsys(ser, 'bkcmd', 0)     # already set in display
-    ser.reset_output_buffer()
 
     # Time as thread
     t_timethread = threading.Thread(target=set_time, name='Time Display', args=(ser,))
     t_timethread.start()
 
-    cbpi.app.logger.info("NEXTIONDisplay  - init passed")
+    cbpi.app.logger.info("NEXTIONDisplay  - NEXTION init passed")
     # end of init
+
 
     @cbpi.backgroundtask(key="Nextionjob", interval=6)  # 4 = 27 min, 5 = 33.8 min, 6 = 40.6 min
     def Nextionjob(api):
         # This is the main job
-
-        global kettleID
-        kettleID = set_parameter_kettleID()
-
+        kettleID = int(set_parameter_kettleID())
+        # kettleID = int(set_parameter_kettleName())
         fermid = int(set_parameter_fermID())
+        dubbleline = set_parameter_dubbleline(ser)
+
+        if DEBUG: cbpi.app.logger.info("NextionDisplay - kettleID parameter %s %s" % (kettleID, type(kettleID)))
 
         ip = set_ip()
 
@@ -699,7 +768,7 @@ def initNextion(app):
         NextionwriteString(ser, "t2start", iptext)
 
         writingDigittoNextion(ser, kettleID)
-        writewave(ser, kettleID)
+        writewave(ser, kettleID, dubbleline=dubbleline)
         writefermwave(ser, fermid)
 
         # THREAD - DETECT push buttons
@@ -710,6 +779,6 @@ def initNextion(app):
             # if DEBUG: cbpi.app.logger.info("NextionDisplay  - thread read serial detected")
             pass
         else:
-            t_serialread = threading.Thread(target=detect_touch, name='read serial', args=(ser,))
+            t_serialread = threading.Thread(target=detect_touch, name='read serial', args=(ser, kettleID, dubbleline))
             t_serialread.start()
             if DEBUG: cbpi.app.logger.info("NextionDisplay  - threads Thread started")
