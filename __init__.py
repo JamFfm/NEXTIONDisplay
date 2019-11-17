@@ -37,7 +37,7 @@ from time import strftime       # Time display
 from time import sleep
 import threading
 
-DEBUG = True                   # toggle writing of debug information in the app.log
+DEBUG = False                   # toggle writing of debug information in the app.log
 TERMINATOR = bytearray([0xFF, 0xFF, 0xFF])
 liste = []
 listetarget = []
