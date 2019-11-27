@@ -64,6 +64,8 @@ Have a look:
 
 ![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/BrewGraphdark.jpg "Example Waveform")
 
+![Screens](https://github.com/JamFfm/NEXTIONDisplay/blob/master/CBPi3Display/Multiview.jpg "Example Multiview")
+
 
 # Introduction to Nextion Displays
 
