@@ -158,6 +158,8 @@ I assume the serial of bluetooth needs to be captured. I did not want to kill bl
 
 The kettlenames and stepnames sometimes are missing letters. This is the only way I was able to implement letters into the Nextion. This is for shure my lack of knowlage. 
 
+The code of the statusbar in the Multibrew screen is not ready build. Will be implemented in next release.
+
 
 **Help is welcome**
 
