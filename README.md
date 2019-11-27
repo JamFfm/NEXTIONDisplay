@@ -122,13 +122,15 @@ VCC     | use 5v (jumper)     |  x
 # Usage
 
 Push the buttons in the startscreen and choose the desired screen.
-1. There is a screen with big digits with current temperature and the target temperature.
+1. There is a screen with big digits with current temperature and the target temperature and current Kettlename.
 
 2. There is a graph which will show the mash temperature of the past 40 min and its corresponding target temperature. Attention: If target temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active kettle and the name of the active rest is shown. At active rest the remaining time of the timer is shown.
 
 3. There is a graph which will show the fermenter temperature of the past 40 min and its corresponding target temperature. Attention: If target fermenter temperature is not in the displayed range of the current temperature the target temperature is not plotted. Name of active fermenter+beername and the name of the active fermstep is shown. please use a short fermenter name. At active rest the remaining time of the fermenter-timer is shown.
 
-4. There is a dark mode of the brew-screen and the ferm-screen. In the home-screen you con change the mod by touch the "darkmode xx" text. The digit -screne has got only one mode. 
+4. There is a dark mode of the brew-screen and the ferm-screen. In the home-screen you can change the modus by touch the "darkmode on/off" text. The digit -screen has got only one mode. 
+
+5. There is a Multiview which displays current temperature, target temperature for up to 4 kettles. Kettlenames are listet. If the heater of the kettle is on an flame-icon appears. on active step the stepnamer and remaining time is displayed.
 
 # Parameter
 
@@ -142,6 +144,9 @@ NEXTION_Fermenter_ID: Choose fermenter (Number), NO! CBPi reboot required, defau
 NEXTION_Serial_Port: Choose the Serial Port, Windows like COM1, Linux like dev/ttyS0,/dev/ttyAM0, etc. NO! CBPi reboot required
 The code in the Repro uses USB Connection. You can change your connection/port here. Default is usb: /dev/ttyUSB0
 
+NEXTION_bold_line: on / off
+This will show the graph and targetline in bold. The parameter is used for berwing mode as well as for fermenter mode. Technically this is done by wiriting 2 lines with just 1 pixel difference. Bold has got a better appearance but is a little bit more slow.
+
 
 # Known problems
 
@@ -150,6 +155,8 @@ Due to the fact that wave is only working with integer the wavevalues have to be
 
 With Raspi 3b I got some Problems to connect to a serial port. Raspi could only read the Nextion but not write to it. 
 I assume the serial of bluetooth needs to be captured. I did not want to kill bluetooth though I do not use it in my installation.
+
+The kettlenames and stepnames sometimes are missing letters. This is the only way I was able to implement letters into the Nextion. This is for shure my lack of knowlage. 
 
 
 **Help is welcome**
@@ -160,15 +167,15 @@ I assume the serial of bluetooth needs to be captured. I did not want to kill bl
 Fixed: Scale is fixed so you can't see much small temp changes. It is an overview to the past 17 min and shows from 0-100°C.
 Next versions will have a variable scale which takes into consideration of the highest and lowest temp value.-> done
 
-Still struggling with the ASCII and UTF8. Therefore kettle and rest- names are not implemented-> done
+Still struggling with the ASCII and UTF8. Therefore kettle and rest- names are not implemented-> done but some letters are scipped
 
 While pushing clear-button the min and max values are not deleted.-> done
 
-Because of a lag of knowledge the rebuild of the graph in a new temperature scale is slow. Will fix it with higher baud rate of serial connection and the NEXTION addt function in the future.-> done
+Because of a lag of knowledge the rebuild of the graph in a new temperature scale is slow. Will fix it with higher baud rate of serial connection and the NEXTION addt function in the future.-> done used instead of addt use ref_stop or ref_star
 
 Until now fahrenheit is not supported. But will be in further releases.-> done
 
-In the Brew Graph mode pushing home button and again Brew mode button there is wild data shown. Just go back to home and again to Brew mode. Sometimes this has to be done several times. Will try to fix in next versions.-> done
+In the Brew Graph mode pushing home button and again Brew mode button there is wild data shown. Just go back to home and again to Brew mode. Sometimes this has to be done several times. Will try to fix in next versions.-> done but......sometimes this is still needed
 
 The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.-> done
 
