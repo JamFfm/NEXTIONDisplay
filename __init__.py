@@ -97,35 +97,27 @@ def writing_multi_to_nextion(ser):
             CurrMTemp = ("%6.2f%s" % (currenttemp_float(x), (chr(176))))
             target_temp_field = "TarTempMTxt" + str(x)
             TarTempMTxt = ("%6.2f%s" % (targettemp_float(x), (chr(176))))
-            heater_status_field = "heaterstatusM" + str(x)
 
             NextionwriteString(ser, kettle_name_field, KettlenMTxt)
             NextionwriteString(ser, current_temp_field, CurrMTemp)
             NextionwriteString(ser, target_temp_field, TarTempMTxt)
 
+            heater_status_field = "heaterstatusM" + str(x)
             if heater_status(x) == "on":
-                if DEBUG: cbpi.app.logger.info("NextionDisplay  - writing_multi_to_nextion heater status on")
+                if DEBUG: cbpi.app.logger.info("NextionDisplay  - writing_multi_to_nextion: heater status on")
                 Nextionshowhideobject(ser, heater_status_field, "on")
             else:
                 Nextionshowhideobject(ser, heater_status_field, "off")
         except:
-            if DEBUG: cbpi.app.logger.info("NextionDisplay  - writing_multi_to_nextion no Kettle %s" % x)
+            if DEBUG: cbpi.app.logger.info("NextionDisplay  - writing_multi_to_nextion: no Kettle %s found" % x)
             heater_status_field = "heaterstatusM" + str(x)
             Nextionshowhideobject(ser, heater_status_field, "off")
         pass
     pass
-    NextionwriteString(ser, "TimeRemainMTxt", time_remaining(ser))
 
-
-def heater_status(kettleid):
-
-    heater_of_kettle = int(cbpi.cache.get("kettle").get(kettleid).heater)
-    heater_status = int(cbpi.cache.get("actors").get(heater_of_kettle).state)
-    if heater_status == 1:
-        return "on"
-    else:
-        return "off"
-    pass
+    time_remaining(ser)  # attention the name of the textfield is defined in the function  currently "remBrewTime")
+    val = multiprogressbarvalue()
+    Nextionprogressbar(ser, "RemainTimeMBar", val)
 
 
 def Nextionshowhideobject(ser, objectname, onoff):
@@ -140,6 +132,36 @@ def Nextionshowhideobject(ser, objectname, onoff):
         command = ('vis %s,%s' % (objectname, onoff))
         ser.write(command)
         ser.write(TERMINATOR)
+    pass
+
+
+def multiprogressbarvalue():
+    s = cbpi.cache.get("active_step")
+    if DEBUG: cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: %s' % s)
+    try:
+        if s.timer_end is not None:
+            val = int(100 - (((s.timer_end - time.time()) * 100) / (s.timer*60)))
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: %s%s' % (val, "%"))
+            return val
+        else:
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: no active step')
+            return 0
+        pass
+    except:
+        cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: exception ')
+        return 0
+        pass
+    pass
+
+
+def Nextionprogressbar(ser, barname, val):
+    try:
+        command = ("%s.val=%s" % (barname, str(val)))
+        if DEBUG: cbpi.app.logger.info('NextionDisplay  - Nextionprogressbar command Txt:%s' % command)
+        ser.write(command)
+        ser.write(TERMINATOR)
+    except:
+        cbpi.app.logger.info('NextionDisplay  - Nextionprogressbar can not convert val into string: %s' % command)
     pass
 
 
@@ -457,6 +479,7 @@ def time_remaining(ser):
     try:
         if s.timer_end is not None:
             time_remain = time.strftime("%H:%M:%S", time.gmtime(s.timer_end - time.time()))
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - time_remaining:%s %s %s' % (s.timer_end, time.time(), s.timer))
             NextionwriteString(ser, "remBrewTime", time_remain)
         else:
             NextionwriteString(ser, "remBrewTime", "")
@@ -535,6 +558,16 @@ def currenttemp_float(kettleID):
 def targettemp_float(kettleID):
     targettemp = float(TempTargTemp(kettleID))
     return targettemp
+
+
+def heater_status(kettleid):
+    heater_of_kettle = int(cbpi.cache.get("kettle").get(kettleid).heater)
+    heater_status = int(cbpi.cache.get("actors").get(heater_of_kettle).state)
+    if heater_status == 1:
+        return "on"
+    else:
+        return "off"
+    pass
 
 
 def ferm_name(fermid):
@@ -674,43 +707,6 @@ def set_parameter_kettleID():
         cbpi.app.logger.info("NEXTIONDisplay - KettleID added: %s" % kettleid)
     return kettleid
 
-
-def set_parameter_kettleName():
-    # not used not functional
-    kettlename = cbpi.get_config_parameter("NEXTION_Kettle_Name", None)
-    if kettlename is None:
-        kettlename = cbpi.cache.get("kettle").get(1).name
-        try:
-            cbpi.add_config_parameter("NEXTION_Kettle_Name", kettlename, "kettle", "Select kettle Name, NO! CBPi "
-                                                                                   "reboot required")
-            cbpi.app.logger.info("NEXTIONDisplay - KettleName added: %s" % kettlename)
-        except:
-            pass
-    for idx, value in cbpi.cache["kettle"].items():
-        name = cbpi.cache.get("kettle").get(value.id).name
-        if DEBUG: cbpi.app.logger.info("NEXTIONDisplay - KettleName items Name: %s" % name)
-        if DEBUG: cbpi.app.logger.info("NEXTIONDisplay - KettleName items ID: %s" % value.ID)
-        if name == kettlename:
-            if DEBUG: cbpi.app.logger.info("NEXTIONDisplay - KettleName selected items ID: %s" % value.ID)
-            return value.ID
-
-
-
-    # todo
-
-    # read kettlename from choose
-    # loop through all kettles and compare kettlename with kettlename from select
-    # if kettlename_from_choose == cbpi.cache.get("kettle").get(kettleID)).name):
-    #   return kettleID
-    # for idx, value in cbpi.cache["fermenter"].items():
-    #     current_sensor_value = (cbpi.get_sensor_value(value.sensor))
-    #     # INFO value = modules.fermenter.Fermenter
-    #     # INFO FermenterId = modules.fermenter.Fermenter.id
-
-    #     # get the state of the heater of the current fermenter, if there is none, except takes place
-    #     try:
-    #         heater_of_fermenter = int(cbpi.cache.get("fermenter").get(value.id).heater)
-    #         # cbpi.app.logger.info("LCDDisplay  - fheater id %s" % (heater_of_fermenter))
 
 def set_parameter_fermID():
     fermid = cbpi.get_config_parameter("NEXTION_Fermenter_ID", None)
