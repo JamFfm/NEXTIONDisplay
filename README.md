@@ -20,12 +20,7 @@ Now you see the new startscreen.
     git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
     `
     
-    A update is done by the following commands in the command box of the Raspi
-    
-    ```python
-    cd /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
-    git pull
-    ```
+    A update is done by the same commands unless it is not in the oficial add on list.
 
 3. Reboot at least CBPi3
 
@@ -36,6 +31,8 @@ Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. 
 Maybe pyserial lib has to be installed if there is an error at import serial:
 
 In commandbox type in: python -m pip install pyserial
+
+4. Keep in mind that you have to access the SD Card slot and a power off/power on of the Nextion display when build in an enclosure. You need that for updates of the Nextion display. Da stl file of a brezel in in the directory. This is also available on the Nextion webside.
 
 
 # What for?
