@@ -32,7 +32,7 @@ Maybe pyserial lib has to be installed if there is an error at import serial:
 
 In commandbox type in: python -m pip install pyserial
 
-4. Keep in mind that you have to access the SD Card slot and a power off/power on of the Nextion display when build in an enclosure. You need that for updates of the Nextion display. Da stl file of a brezel in in the directory. This is also available on the Nextion webside.
+4. Keep in mind that you have to access the SD Card slot and a power off/power on of the Nextion display when build in an enclosure. You need that for updates of the Nextion display. There is a stl file of a bezel in in the NEXTION Display directory (as zip). This is also available on the Nextion webside.
 
 
 # What for?
