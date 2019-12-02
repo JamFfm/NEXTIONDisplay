@@ -16,11 +16,13 @@ Now you see the new startscreen.
 
     Key in in the command box of Raspi
 
-    `
-    git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay
-    `
+    `git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
     
     A update is done by the same commands unless it is not in the oficial add on list.
+    
+    But first you have to deleate the Folder 
+    
+    `sudo rm -r /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay/`
 
 3. Reboot at least CBPi3
 
