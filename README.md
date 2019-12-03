@@ -111,6 +111,8 @@ For USB connection please use a USB to Serial converter like this one.
 
 https://de.aliexpress.com/item/32470262188.html?spm=a2g0s.9042311.0.0.51364c4dlbTYMx
 
+Use 5V for the jumper position on the USB to Serial converter.
+
 Nextion | USB Serial Converter| Raspi
 ------- | --------------------| -----
 TX      | RX                  |  U
