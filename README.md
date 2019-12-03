@@ -155,9 +155,7 @@ Due to the fact that wave is only working with integer the wavevalues have to be
 With Raspi 3b I got some Problems to connect to a serial port. Raspi could only read the Nextion but not write to it. 
 I assume the serial of bluetooth needs to be captured. I did not want to kill bluetooth though I do not use it in my installation.
 
-The kettlenames and stepnames sometimes are missing letters. This is the only way I was able to implement letters into the Nextion. This is for shure my lack of knowlage. 
-
-The code of the statusbar in the Multibrew screen is not ready build. Will be implemented in next release.
+The kettlenames and stepnames sometimes are missing letters. I did not understand how encode and decode really function until now. This is the only way I was able to implement letters into the Nextion. This is for shure my lack of knowlage. 
 
 
 **Help is welcome**
@@ -180,6 +178,7 @@ In the Brew Graph mode pushing home button and again Brew mode button there is w
 
 The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.-> done
 
+The code of the statusbar in the Multibrew screen is not ready build. Will be implemented in next release.-> done
 
 # Support
 
