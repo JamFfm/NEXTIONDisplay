@@ -50,6 +50,7 @@ Does the same as the TFTDisplay-addin and LCD-addin together. Have a look at the
 - Dark Mode
 - no loss of graphdata when changing views
 - graph, stepname, kettelname, remaining time of rest, current temp, target temp in one screen
+- watch up to 4 kettles at once
 - easy change of gui via Nextion Editor
 - bright display
 
@@ -138,14 +139,14 @@ Push the buttons in the startscreen and choose the desired screen.
 Have a look in the parameters section in CraftbeerPi3 Gui.
 All parameter with the Nextion "flag" will have influence.
 
-NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is number 1.
+1. NEXTION_Kettle_ID: Choose kettle (Number), NO! CBPi reboot required, default is number 1.
 
-NEXTION_Fermenter_ID: Choose fermenter (Number), NO! CBPi reboot required, default is number 1.
+2. NEXTION_Fermenter_ID: Choose fermenter (Number), NO! CBPi reboot required, default is number 1.
 
-NEXTION_Serial_Port: Choose the Serial Port, Windows like COM1, Linux like dev/ttyS0,/dev/ttyAM0, etc. NO! CBPi reboot required
+3. NEXTION_Serial_Port: Choose the Serial Port, Windows like COM1, Linux like dev/ttyS0,/dev/ttyAM0, etc. NO! CBPi reboot required
 The code in the Repro uses USB Connection. You can change your connection/port here. Default is usb: /dev/ttyUSB0
 
-NEXTION_bold_line: on / off
+4. NEXTION_bold_line: on / off
 This will show the graph and targetline in bold. The parameter is used for berwing mode as well as for fermenter mode. Technically this is done by wiriting 2 lines with just 1 pixel difference. Bold has got a better appearance but is a little bit more slow.
 
 
