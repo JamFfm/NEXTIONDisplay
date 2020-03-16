@@ -12,18 +12,7 @@ Now you see the new startscreen.
 
 2. Load the NEXTIONDisplay addin from the CraftbeerPi3 addin section.
 
-    Workaround:
-
-    Key in in the command box of Raspi
-
-    `git clone https://github.com/JamFfm/NEXTIONDisplay.git -b master --single-branch /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay`
     
-    A update is done by the same commands unless it is not in the oficial add on list.
-    
-    But first you have to delete the Folder 
-    
-    `sudo rm -r /home/pi/craftbeerpi3/modules/plugins/NEXTIONDisplay/`
-
 3. Reboot at least CBPi3
 
 Maybe the Serial connection has to be turned off at the RASPI Settings. Reboot. Go again to the RASPI Settings. Turn on the Serial Port. Turn off the Serial console.
@@ -158,8 +147,6 @@ Due to the fact that wave is only working with integer the wavevalues have to be
 With Raspi 3b I got some Problems to connect to a serial port. Raspi could only read the Nextion but not write to it. 
 I assume the serial of bluetooth needs to be captured. I did not want to kill bluetooth though I do not use it in my installation.
 
-The kettlenames and stepnames sometimes are missing letters. I did not understand how encode and decode really function until now. This is the only way I was able to implement letters into the Nextion. This is for shure my lack of knowlage. 
-
 
 **Help is welcome**
 
@@ -182,6 +169,8 @@ In the Brew Graph mode pushing home button and again Brew mode button there is w
 The fermenting graphs are not build up to now. This will be implemented when brewgraph is stable.-> done
 
 The code of the statusbar in the Multibrew screen is not ready build. Will be implemented in next release.-> done
+
+The kettlenames and stepnames sometimes are missing letters. I did not understand how encode and decode really function until now. --> done
 
 # Support
 
