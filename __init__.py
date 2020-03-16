@@ -1,5 +1,5 @@
 # !/usr/bin/env python
-# *-* coding: iso-8859-1 *-*
+# -*- coding: utf-8 -*-
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-# NextionDisplay Version 0.0.9.4
+# NextionDisplay Version 0.0.9.6
 # Assembled by JamFfm
 #
 # sudo pip install pyserial         # install serial, unlikely you have to
@@ -37,7 +37,7 @@ from time import strftime       # Time display
 from time import sleep
 import threading
 
-DEBUG = False                   # toggle writing of debug information in the app.log
+DEBUG = False                       # toggle writing of debug information in the app.log
 TERMINATOR = bytearray([0xFF, 0xFF, 0xFF])
 liste = []
 listetarget = []
@@ -63,16 +63,16 @@ def nx_setsys(ser, sysvar, value):  # Set system variables. sysvar as text. exam
 
 
 def writingDigittoNextion(ser, kettleID=1):
-    unit = set_nextion_unit()
+    unit = "°" + str(set_nextion_unit())
     ctemp = currenttemp_float(kettleID)
     #   Current Temperature in text field
-    TextDigitTxt2 = ("%6.2f%s" % (ctemp, (chr(176)+str(unit))))
+    TextDigitTxt2 = ("%6.2f%s" % (ctemp, unit))  # UTF8° = U+00B0
     textCurrTemp2 = str(TextDigitTxt2)
     # if DEBUG: cbpi.app.logger.info('NextionDisplay  - digit CurrTempTxt.txt:%s' % (textCurrTemp2))
     NextionwriteString(ser, "CurrTempTxt", textCurrTemp2)
 
     #   Target Temp in Text Field    
-    TextDigitTxt3 = ("%6.2f%s" % (float(TempTargTemp(kettleID)), (chr(176)+str(unit))))
+    TextDigitTxt3 = ("%6.2f%s" % (float(TempTargTemp(kettleID)), unit))
     textCurrTemp3 = str(TextDigitTxt3)
     # if DEBUG: cbpi.app.logger.info('NextionDisplay  - TargTempTxt.txt:%s' % (textCurrTemp3))
     NextionwriteString(ser, "TargetTempTxt", textCurrTemp3)
@@ -84,7 +84,7 @@ def writingDigittoNextion(ser, kettleID=1):
 
 
 def writing_multi_to_nextion(ser):
-    unit = (chr(176)+str(set_nextion_unit()))
+    unit = ("°" + str(set_nextion_unit()))
     NextionwriteString(ser, "unitMBrew", str(unit))
     stepnameMTxt = restname()
     NextionwriteString(ser, "StepnameMTxt", stepnameMTxt)
@@ -94,15 +94,15 @@ def writing_multi_to_nextion(ser):
             kettle_name_field = "KettlenMTxt" + str(x)
             KettlenMTxt = kettlename(x)
             current_temp_field = "CurrMTemp" + str(x)
-            CurrMTemp = ("%6.2f%s" % (currenttemp_float(x), (chr(176))))
+            CurrMTemp = ("%6.2f%s" % (currenttemp_float(x), "°"))
             target_temp_field = "TarTempMTxt" + str(x)
-            TarTempMTxt = ("%6.2f%s" % (targettemp_float(x), (chr(176))))
+            TarTempMTxt = ("%6.2f%s" % (targettemp_float(x), "°"))
+            heater_status_field = "heaterstatusM" + str(x)
 
             NextionwriteString(ser, kettle_name_field, KettlenMTxt)
             NextionwriteString(ser, current_temp_field, CurrMTemp)
             NextionwriteString(ser, target_temp_field, TarTempMTxt)
 
-            heater_status_field = "heaterstatusM" + str(x)
             if heater_status(x) == "on":
                 if DEBUG: cbpi.app.logger.info("NextionDisplay  - writing_multi_to_nextion: heater status on")
                 Nextionshowhideobject(ser, heater_status_field, "on")
@@ -144,11 +144,11 @@ def multiprogressbarvalue():
             if DEBUG: cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: %s%s' % (val, "%"))
             return val
         else:
-            if DEBUG: cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: no active step')
+            if DEBUG: cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: no timer running')
             return 0
         pass
     except:
-        cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: exception ')
+        if DEBUG: cbpi.app.logger.info('NextionDisplay  - multiprogressbarvalue: no active step ')
         return 0
         pass
     pass
@@ -239,11 +239,11 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False, dubbleline=True):
     targettemp = targettemp_float(kettleID)
     unit = set_nextion_unit()
     #   Current Temperature in text field
-    TextDigitTxt0 = ("%6.2f%s" % (currenttemp, (chr(176)+str(unit))))
+    TextDigitTxt0 = ("%6.2f%s" % (currenttemp, ("°"+str(unit))))
     textCurrTemp0 = str(TextDigitTxt0)
     NextionwriteString(ser, "CurrTempBrwTxt", textCurrTemp0)
     #   Target Temp in Text Field    
-    TextDigitTxt1 = ("%6.2f%s" % (targettemp, (chr(176)+str(unit))))
+    TextDigitTxt1 = ("%6.2f%s" % (targettemp, ("°"+str(unit))))
     textCurrTemp1 = str(TextDigitTxt1)
     NextionwriteString(ser, "TargTempBrwTxt", textCurrTemp1)
     #   Current Kettlename in text field    
@@ -277,9 +277,9 @@ def writewave(ser, kettleID=1, erase=False, rewrite=False, dubbleline=True):
     # min max labels for scale
     max_value = round((max(liste)+0.1), 1)
     min_value = round((min(liste)-0.1), 1)
-    NextionwriteString(ser, "tmax", "%s%s" % (max_value, (chr(176)+str(unit))))
-    NextionwriteString(ser, "tmin", "%s%s" % (min_value, (chr(176)+str(unit))))
-    NextionwriteString(ser, "tavarage", "%s%s" % (round(((max_value+min_value)/2), 1), (chr(176)+str(unit))))
+    NextionwriteString(ser, "tmax", "%s%s" % (max_value, ("°"+str(unit))))
+    NextionwriteString(ser, "tmin", "%s%s" % (min_value, ("°"+str(unit))))
+    NextionwriteString(ser, "tavarage", "%s%s" % (round(((max_value+min_value)/2), 1), ("°"+str(unit))))
     # get the scaling-factor
     offset = (max_value - min_value)
     xpixel = 202  # the height of the wave object on Nextion if you change the wave-height this has to be adjusted
@@ -352,12 +352,12 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False, dubbleline=True):
     unit = set_nextion_unit()
     #   Current Temperature in text field
     cfermtemp = currentfermtemp(fermid)
-    TextDigitTxt0 = ("%6.2f%s" % (cfermtemp, (chr(176)+str(unit))))
+    TextDigitTxt0 = ("%6.2f%s" % (cfermtemp, ("°"+str(unit))))
     textCurrTemp0 = str(TextDigitTxt0)
     NextionwriteString(ser, "CurFermTmpTxt", textCurrTemp0)
     #   Target Temp in Text Field
     tfermtemp = targetfermtemp(fermid)
-    TextDigitTxt1 = ("%6.2f%s" % (tfermtemp, (chr(176)+str(unit))))
+    TextDigitTxt1 = ("%6.2f%s" % (tfermtemp, ("°"+str(unit))))
     textCurrTemp1 = str(TextDigitTxt1)
     NextionwriteString(ser, "targFermTmpTxt", textCurrTemp1)
     #   Current Kettlename and beername in text field
@@ -373,7 +373,8 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False, dubbleline=True):
     #   build liste of current temp values
     if erase is True:
         del FERMLISTE[:]
-    elif len(FERMLISTE) < 406:  # the with of the wave object on Nextion if you change the wave-with this has to be adjusted
+    elif len(FERMLISTE) < 406:  # the with of the wave object on Nextion if you change the wave-with this has to be
+        # adjusted
         FERMLISTE.append(cfermtemp)
     else:
         del FERMLISTE[0]
@@ -392,9 +393,9 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False, dubbleline=True):
     # min max labels for scale
     fmax_value = round((max(FERMLISTE)+0.1), 1)
     fmin_value = round((min(FERMLISTE)-0.1), 1)
-    NextionwriteString(ser, "tfermmax", "%s%s" % (fmax_value, (chr(176)+str(unit))))
-    NextionwriteString(ser, "tfermmin", "%s%s" % (fmin_value, (chr(176)+str(unit))))
-    NextionwriteString(ser, "tfermavarage", "%s%s" % (round(((fmax_value+fmin_value)/2), 1), (chr(176)+str(unit))))
+    NextionwriteString(ser, "tfermmax", "%s%s" % (fmax_value, ("°"+str(unit))))
+    NextionwriteString(ser, "tfermmin", "%s%s" % (fmin_value, ("°"+str(unit))))
+    NextionwriteString(ser, "tfermavarage", "%s%s" % (round(((fmax_value+fmin_value)/2), 1), ("°"+str(unit))))
     # get the scaling-factor
     offset = (fmax_value - fmin_value)
     xpixel = 202  # the height of the wave object on Nextion if you change the wave height this has to be adjusted
@@ -436,8 +437,7 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False, dubbleline=True):
     else:
         digit = (round(float((cfermtemp - fmin_value) * ffactor), 2))
         digitbold = digit + 1
-        if digit != 0:
-            ## TODO hier abfangen das digit nicht gleich null wird
+        if digit != 0:      # prevent digit from becoming zero
             string = (str(round(float(digit)))[:-2])
             stringbold = (str(round(float(digitbold)))[:-2])
             NextionwriteWave(ser, 5, 0, string)
@@ -468,10 +468,10 @@ def writefermwave(ser, fermid=1, erase=False, frewrite=False, dubbleline=True):
 
 def cbidecode(string):
     # if DEBUG: cbpi.app.logger.info('NextionDisplay  - string:%s' % string)
-    udata=string.encode("iso-8859-1")
-    asciidata=udata.decode("ascii", "ignore")
+    udata=string.encode("utf-8")
+    asciidata=udata.decode("utf-8", "ignore")
     # if DEBUG: cbpi.app.logger.info('NextionDisplay  - encoded_str:%s' % (asciidata))
-    return asciidata.encode("iso-8859-1")
+    return asciidata.encode("utf-8")
 
 
 def time_remaining(ser):
@@ -488,6 +488,23 @@ def time_remaining(ser):
         NextionwriteString(ser, "remBrewTime", "")
     pass
 
+
+def time_remaining1(ser):
+    while True:
+        s = cbpi.cache.get("active_step")
+        try:
+            if s.timer_end is not None:
+                time_remain = time.strftime("%H:%M:%S", time.gmtime(s.timer_end - time.time()))
+                if DEBUG: cbpi.app.logger.info('NextionDisplay  - time_remaining:%s %s %s' % (s.timer_end, time.time(), s.timer))
+                NextionwriteString(ser, "remBrewTime", time_remain)
+            else:
+                NextionwriteString(ser, "remBrewTime", "")
+            pass
+        except:
+            NextionwriteString(ser, "remBrewTime", "")
+        pass
+    pass
+# todo: seems not to be used
 
 def fermtime_remaining(ser, fermid):
     try:
@@ -562,8 +579,8 @@ def targettemp_float(kettleID):
 
 def heater_status(kettleid):
     heater_of_kettle = int(cbpi.cache.get("kettle").get(kettleid).heater)
-    heater_status = int(cbpi.cache.get("actors").get(heater_of_kettle).state)
-    if heater_status == 1:
+    heater_status_of_kettle = int(cbpi.cache.get("actors").get(heater_of_kettle).state)
+    if heater_status_of_kettle == 1:
         return "on"
     else:
         return "off"
@@ -603,10 +620,15 @@ def kettlename(kettleID):
 def restname():
     s = cbpi.cache.get("active_step")
     if s is not None:
-        brewrestname = s.name
-        # if DEBUG: cbpi.app.logger.info('NextionDisplay  - brewrestname:%s' % (brewrestname))
-        brewrestname = cbidecode(brewrestname)
-        return brewrestname
+        try:
+            brewrestname = s.name
+            # if DEBUG: cbpi.app.logger.info('NextionDisplay  - brewrestname:%s' % (brewrestname))
+            brewrestname = cbidecode(brewrestname)
+            return brewrestname
+        except:
+            pass
+            return "restart not detected"
+
     else:
         return "no active rest"
     pass
@@ -764,7 +786,7 @@ def detect_touch(ser, kettleID, dubbleline):
         if len(touch) != 0:
             istouch = hex(ord(touch[0]))
             if istouch == "0x65":
-                cbpi.app.logger.info("NextionDisplay  - touch: A button was pushed %s" % istouch)
+                cbpi.app.logger.info("NextionDisplay  - touch: A button has been pushed %s" % istouch)
                 pageID_touch = hex(ord(touch[1]))
                 compID_touch = hex(ord(touch[2]))
                 event_touch = hex(ord(touch[3]))
@@ -807,7 +829,6 @@ def initNextion(app):
         cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Serial Port:     %s" % port)
         cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Fermenter_ID:    %s" % set_parameter_fermID())
         cbpi.app.logger.info("NEXTIONDisplay - NEXTION_bold_line:       %s" % set_parameter_dubbleline(ser))
-        # cbpi.app.logger.info("NEXTIONDisplay - NEXTION_Kettle_Name:     %s" % set_parameter_kettleName)
     except:
         pass
 
@@ -821,18 +842,15 @@ def initNextion(app):
     cbpi.app.logger.info("NEXTIONDisplay - NEXTION init passed")
     # end of init
 
-
     @cbpi.backgroundtask(key="Nextionjob", interval=6)  # 4 = 27 min, 5 = 33.8 min, 6 = 40.6 min
     def Nextionjob(api):
         # This is the main job
         kettleID = int(set_parameter_kettleID())
-        # kettleID = int(set_parameter_kettleName())
         fermid = int(set_parameter_fermID())
         dubbleline = set_parameter_dubbleline(ser)
-
         ip = set_ip()
-
         cbpi_version = "CBPi %s" % (get_version_fo(""))
+
         # for any reason the first value will be dropped so this is just fake and does nothing
         NextionwriteString(ser, "t1startfake", cbpi_version)
         NextionwriteString(ser, "t1start", cbpi_version)
@@ -840,10 +858,10 @@ def initNextion(app):
         iptext = "IP: %s" % ip
         NextionwriteString(ser, "t2start", iptext)
 
-        writingDigittoNextion(ser, kettleID)
-        writewave(ser, kettleID, dubbleline=dubbleline)
-        writefermwave(ser, fermid, dubbleline=dubbleline)
         writing_multi_to_nextion(ser)
+        writewave(ser, kettleID, dubbleline=dubbleline)
+        writingDigittoNextion(ser, kettleID)
+        writefermwave(ser, fermid, dubbleline=dubbleline)
 
         # THREAD - DETECT push buttons
         threadnames = threading.enumerate()
@@ -856,3 +874,4 @@ def initNextion(app):
             t_serialread = threading.Thread(target=detect_touch, name='read serial', args=(ser, kettleID, dubbleline))
             t_serialread.start()
             if DEBUG: cbpi.app.logger.info("NextionDisplay  - threads Thread started")
+        pass
