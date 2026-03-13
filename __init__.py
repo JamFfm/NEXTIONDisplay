@@ -545,7 +545,7 @@ def fermstepname(fermid):
 
 
 def is_fermenter_step_running():
-    for key, value2 in cbpi.cache["fermenter_task"].items():
+    for key, value2 in list(cbpi.cache["fermenter_task"].items()):
         if value2.state == "A":
             return "active"
         else:
